@@ -1,0 +1,175 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Material Kit Template",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 0,
+  "field_order": [
+    "project",
+    "kit_code",
+    "kit_version",
+    "activity",
+    "source_bom",
+    "output_uom",
+    "bom_output_qty",
+    "items",
+    "status",
+    "approved_by",
+    "approved_at"
+  ],
+  "fields": [
+    {
+      "fieldname": "project",
+      "label": "Project",
+      "fieldtype": "Link",
+      "options": "Project",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "kit_code",
+      "label": "Kit Code",
+      "fieldtype": "Data",
+      "reqd": 1
+    },
+    {
+      "fieldname": "kit_version",
+      "label": "Kit Version",
+      "fieldtype": "Data",
+      "reqd": 1
+    },
+    {
+      "fieldname": "activity",
+      "label": "Activity",
+      "fieldtype": "Data",
+      "reqd": 1
+    },
+    {
+      "fieldname": "source_bom",
+      "label": "Source Bom",
+      "fieldtype": "Link",
+      "options": "BOM",
+      "reqd": 1
+    },
+    {
+      "fieldname": "output_uom",
+      "label": "Output Uom",
+      "fieldtype": "Link",
+      "options": "UOM",
+      "read_only": 1
+    },
+    {
+      "fieldname": "bom_output_qty",
+      "label": "Bom Output Qty",
+      "fieldtype": "Float",
+      "precision": "6",
+      "read_only": 1
+    },
+    {
+      "fieldname": "items",
+      "label": "Items",
+      "fieldtype": "Table",
+      "options": "URANOS Kit Item"
+    },
+    {
+      "fieldname": "status",
+      "label": "Status",
+      "fieldtype": "Select",
+      "options": "Draft\nPending Approval\nApproved\nSuperseded",
+      "default": "Draft",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "approved_by",
+      "label": "Approved By",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "approved_at",
+      "label": "Approved At",
+      "fieldtype": "Datetime",
+      "read_only": 1
+    }
+  ],
+  "permissions": [
+    {
+      "role": "URANOS Executive",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Engineering Director",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Civil Director",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Electrical Execution Manager",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Project Manager",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Site Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Storekeeper",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Procurement Logistics",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS QA QC",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS HSE",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Finance Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Read Only Auditor",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Team Lead",
+      "read": 1,
+      "select": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

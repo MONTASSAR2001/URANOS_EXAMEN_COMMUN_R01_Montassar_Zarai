@@ -1,0 +1,220 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Work Package",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 0,
+  "field_order": [
+    "project",
+    "code",
+    "title",
+    "site",
+    "discipline",
+    "uom",
+    "qty_planned",
+    "weight",
+    "baseline_version",
+    "baseline",
+    "baseline_start",
+    "baseline_finish",
+    "criticality",
+    "status",
+    "required_documents",
+    "material_ready",
+    "access_ready",
+    "baseline_approved"
+  ],
+  "fields": [
+    {
+      "fieldname": "project",
+      "label": "Project",
+      "fieldtype": "Link",
+      "options": "Project",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "code",
+      "label": "Code",
+      "fieldtype": "Data",
+      "reqd": 1
+    },
+    {
+      "fieldname": "title",
+      "label": "Title",
+      "fieldtype": "Data",
+      "reqd": 1
+    },
+    {
+      "fieldname": "site",
+      "label": "Site",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "discipline",
+      "label": "Discipline",
+      "fieldtype": "Data",
+      "reqd": 1
+    },
+    {
+      "fieldname": "uom",
+      "label": "Uom",
+      "fieldtype": "Link",
+      "options": "UOM",
+      "reqd": 1
+    },
+    {
+      "fieldname": "qty_planned",
+      "label": "Qty Planned",
+      "fieldtype": "Float",
+      "reqd": 1,
+      "precision": "6"
+    },
+    {
+      "fieldname": "weight",
+      "label": "Weight",
+      "fieldtype": "Float",
+      "reqd": 1,
+      "precision": "6"
+    },
+    {
+      "fieldname": "baseline_version",
+      "label": "Baseline Version",
+      "fieldtype": "Data",
+      "reqd": 1
+    },
+    {
+      "fieldname": "baseline",
+      "label": "Baseline",
+      "fieldtype": "Link",
+      "options": "URANOS Baseline"
+    },
+    {
+      "fieldname": "baseline_start",
+      "label": "Baseline Start",
+      "fieldtype": "Date"
+    },
+    {
+      "fieldname": "baseline_finish",
+      "label": "Baseline Finish",
+      "fieldtype": "Date"
+    },
+    {
+      "fieldname": "criticality",
+      "label": "Criticality",
+      "fieldtype": "Select",
+      "options": "Normal\nHigh\nCritical",
+      "default": "Normal"
+    },
+    {
+      "fieldname": "status",
+      "label": "Status",
+      "fieldtype": "Select",
+      "options": "Planned\nReady\nIn Progress\nBlocked\nCompleted\nCancelled",
+      "default": "Planned",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "required_documents",
+      "label": "Required Documents",
+      "fieldtype": "Table",
+      "options": "URANOS Document Requirement"
+    },
+    {
+      "fieldname": "material_ready",
+      "label": "Material Ready",
+      "fieldtype": "Check",
+      "read_only": 1
+    },
+    {
+      "fieldname": "access_ready",
+      "label": "Access Ready",
+      "fieldtype": "Check"
+    },
+    {
+      "fieldname": "baseline_approved",
+      "label": "Baseline Approved",
+      "fieldtype": "Check",
+      "read_only": 1
+    }
+  ],
+  "permissions": [
+    {
+      "role": "URANOS Executive",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Engineering Director",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Civil Director",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Electrical Execution Manager",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Project Manager",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Site Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Storekeeper",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Procurement Logistics",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS QA QC",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS HSE",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Finance Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Read Only Auditor",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Team Lead",
+      "read": 1,
+      "select": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

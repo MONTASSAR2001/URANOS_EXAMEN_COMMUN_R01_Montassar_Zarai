@@ -1,0 +1,88 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Reconciliation Item",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 1,
+  "field_order": [
+    "item_code",
+    "issued_qty",
+    "installed_qty",
+    "returned_qty",
+    "approved_scrap_qty",
+    "variance",
+    "approved_variance_qty",
+    "reason",
+    "approval"
+  ],
+  "fields": [
+    {
+      "fieldname": "item_code",
+      "label": "Item Code",
+      "fieldtype": "Link",
+      "options": "Item",
+      "reqd": 1
+    },
+    {
+      "fieldname": "issued_qty",
+      "label": "Issued Qty",
+      "fieldtype": "Float",
+      "precision": "6",
+      "read_only": 1
+    },
+    {
+      "fieldname": "installed_qty",
+      "label": "Installed Qty",
+      "fieldtype": "Float",
+      "precision": "6",
+      "read_only": 1
+    },
+    {
+      "fieldname": "returned_qty",
+      "label": "Returned Qty",
+      "fieldtype": "Float",
+      "precision": "6",
+      "read_only": 1
+    },
+    {
+      "fieldname": "approved_scrap_qty",
+      "label": "Approved Scrap Qty",
+      "fieldtype": "Float",
+      "precision": "6",
+      "read_only": 1
+    },
+    {
+      "fieldname": "variance",
+      "label": "Variance",
+      "fieldtype": "Float",
+      "precision": "6",
+      "read_only": 1
+    },
+    {
+      "fieldname": "approved_variance_qty",
+      "label": "Approved Variance Qty",
+      "fieldtype": "Float",
+      "precision": "6",
+      "read_only": 1
+    },
+    {
+      "fieldname": "reason",
+      "label": "Reason",
+      "fieldtype": "Small Text"
+    },
+    {
+      "fieldname": "approval",
+      "label": "Approval",
+      "fieldtype": "Link",
+      "options": "URANOS Approval"
+    }
+  ],
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

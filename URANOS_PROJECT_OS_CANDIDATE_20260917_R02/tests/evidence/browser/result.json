@@ -1,0 +1,32 @@
+{
+  "evidence_level": "browser UI against explicitly synthetic HTTP fixtures; NOT live Frappe/ERPNext E2E",
+  "timestamp": "2026-09-28T15:54:49.373Z",
+  "browser": "147.0.7727.137",
+  "checks": [
+    "six authorized role views; unknown baseline never shown as zero/green",
+    "separate verified/planned/material KPIs and work-package evidence drill-through",
+    "offline installation and image saved as AES-GCM ciphertext; sync requires connection",
+    "lost-response retry retains UUID, one fixture receipt, full evidence and draft-only result",
+    "separate explicit submit to controller after server draft synchronization",
+    "conflict and rejection are explicit; original envelope/UUID preserved",
+    "five capture forms produce exact envelopes; kit draft never posts stock",
+    "different user's encryption key cannot decrypt persisted drafts",
+    "online independent partial verification control; self-approval action hidden",
+    "mobile 390px FR and Arabic RTL layouts/forms fit viewport",
+    "offline cold start locks without data; online reauthentication recovers drafts; cache static-only",
+    "user switch cannot display prior user's drafts; original user can recover encrypted queue",
+    "read-only dashboard remains usable when encryption-key service unavailable",
+    "actor changes between bootstrap and POST: expected-user header rejects replay and locks UI",
+    "progress allocation stays optional, kit/reel options scoped; double allocation rejected before persistence",
+    "QA-only and Project-Manager-only views cannot verify progress; Site Controller retains independent action",
+    "same-user project revocation hides drafts and blocks bulk/tampered replay; restored scope recovers preserved ciphertext",
+    "Finance-Controller-only session sees scoped control/cost view without field write actions"
+  ],
+  "page_errors": [],
+  "screenshots": [
+    "desktop-fr.png",
+    "mobile-fr.png",
+    "mobile-ar-form.png",
+    "mobile-ar-allocation.png"
+  ]
+}

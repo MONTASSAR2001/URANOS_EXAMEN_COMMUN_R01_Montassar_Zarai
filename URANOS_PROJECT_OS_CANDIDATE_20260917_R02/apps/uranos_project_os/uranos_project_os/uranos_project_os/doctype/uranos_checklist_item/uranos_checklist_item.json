@@ -1,0 +1,115 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Checklist Item",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 1,
+  "field_order": [
+    "code",
+    "description",
+    "required",
+    "completed",
+    "verified_by",
+    "verified_at",
+    "document",
+    "inspection",
+    "acceptance_reference",
+    "result",
+    "procedure_reference",
+    "performed_by",
+    "status",
+    "evidence_file"
+  ],
+  "fields": [
+    {
+      "fieldname": "code",
+      "label": "Code",
+      "fieldtype": "Data",
+      "reqd": 1
+    },
+    {
+      "fieldname": "description",
+      "label": "Description",
+      "fieldtype": "Small Text"
+    },
+    {
+      "fieldname": "required",
+      "label": "Required",
+      "fieldtype": "Check",
+      "default": "1"
+    },
+    {
+      "fieldname": "completed",
+      "label": "Completed",
+      "fieldtype": "Check"
+    },
+    {
+      "fieldname": "verified_by",
+      "label": "Verified By",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "verified_at",
+      "label": "Verified At",
+      "fieldtype": "Datetime",
+      "read_only": 1
+    },
+    {
+      "fieldname": "document",
+      "label": "Document",
+      "fieldtype": "Link",
+      "options": "URANOS Document Register"
+    },
+    {
+      "fieldname": "inspection",
+      "label": "Inspection",
+      "fieldtype": "Link",
+      "options": "Quality Inspection"
+    },
+    {
+      "fieldname": "acceptance_reference",
+      "label": "Acceptance Reference",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "result",
+      "label": "Result",
+      "fieldtype": "Small Text"
+    },
+    {
+      "fieldname": "procedure_reference",
+      "label": "Procedure Reference",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "performed_by",
+      "label": "Performed By",
+      "fieldtype": "Link",
+      "options": "User"
+    },
+    {
+      "fieldname": "status",
+      "label": "Status",
+      "fieldtype": "Select",
+      "options": "Pending\nPassed\nFailed",
+      "default": "Pending",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "evidence_file",
+      "label": "Evidence File",
+      "fieldtype": "Link",
+      "options": "File"
+    }
+  ],
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

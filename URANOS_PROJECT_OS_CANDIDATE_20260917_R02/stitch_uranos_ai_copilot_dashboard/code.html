@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URANOS AI Copilot — Solar Project Intelligence</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+          },
+          colors: {
+            uranos: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              violet: '#7c3aed',
+              cyan: '#06b6d4',
+              amber: '#f59e0b',
+              emerald: '#10b981',
+              rose: '#f43f5e'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Custom mesh background with subtle glow orbs */
+    body {
+      background-color: #f8fafc;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.07) 0px, transparent 45%),
+        radial-gradient(at 50% 50%, rgba(6, 182, 212, 0.04) 0px, transparent 50%),
+        radial-gradient(at 80% 100%, rgba(99, 102, 241, 0.06) 0px, transparent 50%),
+        radial-gradient(at 20% 100%, rgba(245, 158, 11, 0.04) 0px, transparent 40%);
+      background-attachment: fixed;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Glassmorphic card styling matching Apple/Vercel/Linear standards */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 
+        0 20px 40px -4px rgba(15, 23, 42, 0.04),
+        0 6px 16px -2px rgba(15, 23, 42, 0.02),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
+    }
+
+    .glass-panel-subtle {
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      box-shadow: 
+        0 10px 25px -3px rgba(15, 23, 42, 0.03),
+        inset 0 1px 1px rgba(255, 255, 255, 0.9);
+    }
+
+    /* Hover interactive glow */
+    .interactive-card {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .interactive-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 24px 48px -6px rgba(79, 70, 229, 0.08),
+        0 8px 20px -2px rgba(15, 23, 42, 0.03),
+        inset 0 1px 2px 0 rgba(255, 255, 255, 1);
+      border-color: rgba(255, 255, 255, 1);
+    }
+
+    /* Custom smooth scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.35);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(100, 116, 139, 0.5);
+    }
+
+    /* Gradient accent glow */
+    .brand-gradient {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    }
+
+    .brand-gradient-text {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Pulse animation for AI Badge */
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 0; }
+      100% { transform: scale(0.95); opacity: 0; }
+    }
+    .ai-pulse::before {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 9999px;
+      background: #10b981;
+      opacity: 0.4;
+      animation: pulse-ring 2s infinite ease-out;
+    }
+
+    /* RTL specific adjustments */
+    [dir="rtl"] .chat-user-tail {
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 20px;
+    }
+    [dir="ltr"] .chat-user-tail {
+      border-bottom-right-radius: 4px;
+      border-bottom-left-radius: 20px;
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col text-slate-800 antialiased selection:bg-indigo-100 selection:text-indigo-900 overflow-hidden">
+
+  <!-- ================= TOP HEADER ================= -->
+  <header class="glass-panel sticky top-0 z-30 px-6 py-3.5 border-b border-white/80 shrink-0">
+    <div class="max-w-[1720px] mx-auto flex items-center justify-between">
+      
+      <!-- Brand & Project Switcher -->
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-3">
+          <!-- Solar Emblem Logo -->
+          <div class="relative w-9 h-9 rounded-xl brand-gradient flex items-center justify-center text-white shadow-md shadow-indigo-500/25 ring-2 ring-white/80">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="4" stroke-width="2.2"></circle>
+              <path stroke-linecap="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+            </svg>
+            <div class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-cyan-400 ring-2 ring-white"></div>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold tracking-tight text-lg text-slate-900 font-sans">URANOS</span>
+              <span class="text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 rounded-full bg-indigo-50/80 text-indigo-700 border border-indigo-200/60">COPILOT</span>
+            </div>
+            <p class="text-[11px] font-medium text-slate-400 tracking-tight leading-none mt-0.5">Solar Project Intelligence Suite</p>
+          </div>
+        </div>
+
+        <div class="hidden md:block h-5 w-[1px] bg-slate-200/80"></div>
+
+        <!-- Current Project Selector Pill -->
+        <div class="hidden md:flex items-center gap-2.5 px-3 py-1.5 rounded-xl glass-panel-subtle hover:bg-white/80 transition-colors cursor-pointer border border-white/70">
+          <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+          <span class="text-xs font-semibold text-slate-700 tracking-tight">Helios Farm Phase IV (450 MWp)</span>
+          <span class="text-[10px] font-mono text-slate-400">#SP-2024-88</span>
+          <svg class="w-3.5 h-3.5 text-slate-400 ms-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Center status bar -->
+      <div class="hidden lg:flex items-center gap-6 text-xs text-slate-500 font-medium">
+        <div class="flex items-center gap-2">
+          <span class="text-slate-400">Irradiance:</span>
+          <span class="font-semibold text-slate-700">892 W/m²</span>
+          <span class="text-emerald-500 text-[10px] font-semibold">▲ +4.2%</span>
+        </div>
+        <div class="w-1 h-1 rounded-full bg-slate-300"></div>
+        <div class="flex items-center gap-2">
+          <span class="text-slate-400">Installed Capacity:</span>
+          <span class="font-semibold text-slate-700">312 / 450 MW</span>
+        </div>
+        <div class="w-1 h-1 rounded-full bg-slate-300"></div>
+        <div class="flex items-center gap-2">
+          <span class="text-slate-400">Field Inverters Active:</span>
+          <span class="font-semibold text-slate-700">128/132</span>
+        </div>
+      </div>
+
+      <!-- Right Actions: AI Online, Language Switcher, Profile -->
+      <div class="flex items-center gap-3">
+        <!-- AI Online Status Badge -->
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50/80 border border-emerald-200/70 text-emerald-800 text-xs font-medium shadow-sm">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span class="font-semibold tracking-tight text-[11px] uppercase">AI Copilot Online</span>
+          <span class="text-[10px] text-emerald-600/70 font-mono hidden sm:inline">9ms</span>
+        </div>
+
+        <!-- LTR / RTL Direction & Language Switcher -->
+        <div class="flex items-center p-1 rounded-xl glass-panel-subtle border border-white/80 shadow-sm" id="langContainer">
+          <button id="btn-ltr" onclick="setDirection('ltr')" class="px-2.5 py-1 text-xs font-semibold rounded-lg transition-all duration-200 bg-white text-indigo-700 shadow-sm shadow-indigo-100">
+            EN <span class="text-[10px] opacity-60">(LTR)</span>
+          </button>
+          <button id="btn-rtl" onclick="setDirection('rtl')" class="px-2.5 py-1 text-xs font-semibold rounded-lg transition-all duration-200 text-slate-500 hover:text-slate-900">
+            عربي <span class="text-[10px] opacity-60">(RTL)</span>
+          </button>
+        </div>
+
+        <!-- Quick Help / Notifications -->
+        <button class="w-8 h-8 rounded-xl glass-panel-subtle flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+          </svg>
+        </button>
+
+        <!-- User Avatar -->
+        <div class="flex items-center gap-2 ps-1">
+          <div class="w-8 h-8 rounded-full ring-2 ring-white/90 shadow-sm bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white font-bold text-xs">
+            AL
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= MAIN SPLIT VIEW ================= -->
+  <main class="flex-1 flex overflow-hidden p-4 sm:p-5 gap-5 max-w-[1720px] mx-auto w-full">
+    
+    <!-- ================= 1. EXECUTIVE DASHBOARD (70% width) ================= -->
+    <section class="w-full lg:w-[68%] xl:w-[70%] flex flex-col gap-4 overflow-y-auto pe-1 pb-4">
+      
+      <!-- Top Section: Overview Title & Quick Filters -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1">
+        <div>
+          <div class="flex items-center gap-2.5">
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900" id="dash-heading">Executive Operations Hub</h1>
+            <span class="text-xs px-2.5 py-0.5 rounded-full bg-indigo-50 border border-indigo-200/80 text-indigo-700 font-semibold">Q2 Milestone Tracking</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-1">Autonomous EPC tracking, yield forecasting, and field telemetry intelligence.</p>
+        </div>
+
+        <!-- Filter bar -->
+        <div class="flex items-center gap-2 self-start sm:self-auto">
+          <div class="inline-flex rounded-xl p-1 glass-panel-subtle text-xs font-medium text-slate-600">
+            <button class="px-3 py-1 rounded-lg bg-white shadow-xs font-semibold text-slate-900">Live Telemetry</button>
+            <button class="px-3 py-1 rounded-lg text-slate-500 hover:text-slate-800">Forecast</button>
+            <button class="px-3 py-1 rounded-lg text-slate-500 hover:text-slate-800">Logistics</button>
+          </div>
+          <button class="px-3 py-1.5 rounded-xl glass-panel text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-1.5 interactive-card">
+            <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+            </svg>
+            Export Dossier
+          </button>
+        </div>
+      </div>
+
+      <!-- Row of 4 KPI Widgets -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        
+        <!-- KPI 1: Progress -->
+        <div class="glass-panel rounded-2xl p-5 relative overflow-hidden interactive-card group">
+          <!-- Subtle Glowing Icon Background -->
+          <div class="absolute -right-4 -top-4 w-28 h-28 rounded-full bg-gradient-to-br from-indigo-500/15 to-violet-500/5 blur-2xl group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
+          
+          <div class="flex items-center justify-between mb-3 relative z-10">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Overall Progress</span>
+            <div class="w-8 h-8 rounded-xl bg-indigo-50/80 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="relative z-10 flex flex-col items-center justify-center py-1">
+            <div class="text-4xl font-extrabold tracking-tight text-slate-900 font-sans flex items-baseline gap-1">
+              74.8<span class="text-xl font-bold brand-gradient-text">%</span>
+            </div>
+            <p class="text-[11px] font-medium text-emerald-600 flex items-center gap-1 mt-1.5">
+              <span>▲ +3.4%</span>
+              <span class="text-slate-400 font-normal">vs target schedule</span>
+            </p>
+          </div>
+
+          <!-- Progress bar -->
+          <div class="w-full bg-slate-100 rounded-full h-1.5 mt-4 overflow-hidden relative">
+            <div class="brand-gradient h-1.5 rounded-full transition-all duration-1000" style="width: 74.8%"></div>
+          </div>
+          <div class="flex justify-between text-[10px] text-slate-400 font-mono mt-1.5">
+            <span>Milestone: Substation 2</span>
+            <span>Target: 71.4%</span>
+          </div>
+        </div>
+
+        <!-- KPI 2: Lost Hours -->
+        <div class="glass-panel rounded-2xl p-5 relative overflow-hidden interactive-card group">
+          <div class="absolute -right-4 -top-4 w-28 h-28 rounded-full bg-gradient-to-br from-amber-500/15 to-orange-500/5 blur-2xl group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
+          
+          <div class="flex items-center justify-between mb-3 relative z-10">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Lost Work Hours</span>
+            <div class="w-8 h-8 rounded-xl bg-amber-50/80 border border-amber-100 flex items-center justify-center text-amber-600 shadow-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+          </div>
+
+          <div class="relative z-10 flex flex-col items-center justify-center py-1">
+            <div class="text-4xl font-extrabold tracking-tight text-slate-900 font-sans flex items-baseline gap-1">
+              18.5<span class="text-lg font-semibold text-slate-400">h</span>
+            </div>
+            <p class="text-[11px] font-medium text-amber-600 flex items-center gap-1 mt-1.5">
+              <span>▼ -12.3%</span>
+              <span class="text-slate-400 font-normal">reduced downtime</span>
+            </p>
+          </div>
+
+          <div class="w-full bg-slate-100 rounded-full h-1.5 mt-4 overflow-hidden relative">
+            <div class="bg-gradient-to-r from-amber-500 to-orange-400 h-1.5 rounded-full" style="width: 28%"></div>
+          </div>
+          <div class="flex justify-between text-[10px] text-slate-400 font-mono mt-1.5">
+            <span>Dust storm impact</span>
+            <span>Tolerance: 30h</span>
+          </div>
+        </div>
+
+        <!-- KPI 3: Critical Issues -->
+        <div class="glass-panel rounded-2xl p-5 relative overflow-hidden interactive-card group">
+          <div class="absolute -right-4 -top-4 w-28 h-28 rounded-full bg-gradient-to-br from-rose-500/15 to-red-500/5 blur-2xl group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
+          
+          <div class="flex items-center justify-between mb-3 relative z-10">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Critical Issues</span>
+            <div class="w-8 h-8 rounded-xl bg-rose-50/80 border border-rose-100 flex items-center justify-center text-rose-600 shadow-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+              </svg>
+            </div>
+          </div>
+
+          <div class="relative z-10 flex flex-col items-center justify-center py-1">
+            <div class="text-4xl font-extrabold tracking-tight text-slate-900 font-sans flex items-baseline gap-1">
+              02<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200 ms-1">High Pri</span>
+            </div>
+            <p class="text-[11px] font-medium text-slate-500 flex items-center gap-1 mt-1.5">
+              <span class="text-rose-600 font-semibold">1 Tracker motor</span>
+              <span class="text-slate-400 font-normal">/ 1 inverter trip</span>
+            </p>
+          </div>
+
+          <div class="w-full bg-slate-100 rounded-full h-1.5 mt-4 overflow-hidden relative">
+            <div class="bg-gradient-to-r from-rose-500 to-pink-500 h-1.5 rounded-full" style="width: 15%"></div>
+          </div>
+          <div class="flex justify-between text-[10px] text-slate-400 font-mono mt-1.5">
+            <span>Auto-dispatching team</span>
+            <span>Avg SLA: 42m</span>
+          </div>
+        </div>
+
+        <!-- KPI 4: Supply & Site Blockers -->
+        <div class="glass-panel rounded-2xl p-5 relative overflow-hidden interactive-card group">
+          <div class="absolute -right-4 -top-4 w-28 h-28 rounded-full bg-gradient-to-br from-cyan-500/15 to-blue-500/5 blur-2xl group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
+          
+          <div class="flex items-center justify-between mb-3 relative z-10">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Site Blockers</span>
+            <div class="w-8 h-8 rounded-xl bg-cyan-50/80 border border-cyan-100 flex items-center justify-center text-cyan-600 shadow-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+              </svg>
+            </div>
+          </div>
+
+          <div class="relative z-10 flex flex-col items-center justify-center py-1">
+            <div class="text-4xl font-extrabold tracking-tight text-slate-900 font-sans flex items-baseline gap-1">
+              00<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 ms-1">Cleared</span>
+            </div>
+            <p class="text-[11px] font-medium text-emerald-600 flex items-center gap-1 mt-1.5">
+              <span>● 100% Path Unblocked</span>
+            </p>
+          </div>
+
+          <div class="w-full bg-slate-100 rounded-full h-1.5 mt-4 overflow-hidden relative">
+            <div class="bg-gradient-to-r from-emerald-400 to-teal-500 h-1.5 rounded-full" style="width: 100%"></div>
+          </div>
+          <div class="flex justify-between text-[10px] text-slate-400 font-mono mt-1.5">
+            <span>PV Module Shipment</span>
+            <span>ETA: 2 Days</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Below Widgets: Spacious Executive Summary Document Card -->
+      <div class="glass-panel rounded-2xl p-7 relative border border-white/90 shadow-lg flex-1">
+        
+        <!-- Header of Document Card -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-100/90 gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl brand-gradient flex items-center justify-center text-white shadow-sm">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-lg font-bold text-slate-900 tracking-tight" id="doc-title">Executive Project Briefing & Synthesis</h2>
+                <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-600">CONFIDENTIAL</span>
+              </div>
+              <p class="text-xs text-slate-400">Generated by URANOS Neural Engine • Updated 4 minutes ago with site telemetry</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+              <svg class="w-3 h-3 text-indigo-500 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+              </svg>
+              Auto-Sync Active
+            </span>
+          </div>
+        </div>
+
+        <!-- Document Content Body with high typographic rigor (line-height 1.8) -->
+        <div class="mt-6 space-y-6 text-sm text-slate-600 leading-[1.8] font-normal" id="doc-body">
+          
+          <!-- Section 1 -->
+          <div>
+            <div class="flex items-center gap-2 text-slate-900 font-semibold text-base mb-2">
+              <span class="w-1.5 h-4 rounded-full brand-gradient inline-block"></span>
+              <h3 id="sec1-head">1. Construction Pace & Substation Energization</h3>
+            </div>
+            <p id="sec1-p">
+              The project remains comfortably ahead of schedule by <strong class="text-slate-900 font-semibold">+3.4 days</strong>. Mounting structure installations across Blocks B1 through B6 are 91% complete, with 385,000 bifacial monocrystalline modules mounted. Main 220kV transmission line tie-in tests with the central grid authority completed with zero phase discrepancies, ensuring that trial energization will commence exactly on <span class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded text-indigo-700 font-semibold">June 18, 2025</span>.
+            </p>
+          </div>
+
+          <!-- Section Divider -->
+          <div class="relative py-1">
+            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-100"></div></div>
+            <div class="relative flex justify-center"><span class="bg-white/80 px-3 text-[10px] text-slate-400 uppercase tracking-widest font-mono">Field Telemetry Insights</span></div>
+          </div>
+
+          <!-- Section 2: Predictive Yield & Anomaly Analysis -->
+          <div>
+            <div class="flex items-center gap-2 text-slate-900 font-semibold text-base mb-2">
+              <span class="w-1.5 h-4 rounded-full bg-cyan-500 inline-block"></span>
+              <h3 id="sec2-head">2. Weather Mitigation & Dynamic Tracker Optimization</h3>
+            </div>
+            <p id="sec2-p">
+              Wind sensor arrays in Sector C registered peak gusts of 48 km/h between 09:30 and 11:15 UTC. The URANOS autonomous algorithm automatically commanded single-axis tracking tables into the safe 0° horizontal stow position, avoiding structural fatigue. Lost solar capture was restricted to only <strong class="text-slate-900 font-semibold">18.5 total generation hours</strong>, yielding an estimated revenue protection of <span class="text-emerald-600 font-medium">$42,300 USD</span> compared to legacy fixed schedules.
+            </p>
+          </div>
+
+          <!-- Two-column highlight cards inside the document -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+            <div class="p-4 rounded-xl bg-slate-50/70 border border-slate-200/60 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between text-xs font-semibold text-slate-800 mb-1">
+                  <span>String Inverter Health (INV-042)</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-rose-100 text-rose-700 font-bold">ATTENTION</span>
+                </div>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                  Thermal divergence detected on MPPT 4 (+6.2°C above ambient baseline). AI diagnostics pinpointed loose torque on DC busbar terminals. Field tech #4 is dispatched.
+                </p>
+              </div>
+              <div class="flex items-center justify-between mt-3 pt-2 border-t border-slate-200/60 text-[11px]">
+                <span class="text-slate-400">Target Resolution:</span>
+                <span class="font-semibold text-slate-700 font-mono">14:30 Today</span>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-indigo-50/40 border border-indigo-100/60 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between text-xs font-semibold text-indigo-900 mb-1">
+                  <span>Yield Forecast: Next 72 Hours</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 font-bold">OPTIMAL</span>
+                </div>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                  Satellite irradiance data indicates cloudless conditions. Forecasted clean energy export: <strong class="text-slate-800">2,410 MWh</strong>, setting a record for the facility's ramp-up curve.
+                </p>
+              </div>
+              <div class="flex items-center justify-between mt-3 pt-2 border-t border-indigo-100/60 text-[11px]">
+                <span class="text-indigo-600">Expected Carbon Offset:</span>
+                <span class="font-semibold text-slate-700 font-mono">1,820 Tonnes CO₂</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Checklist -->
+          <div class="pt-2">
+            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5">Recommended Executive Actions</h4>
+            <div class="space-y-2">
+              <label class="flex items-start gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer border border-transparent hover:border-slate-200/60">
+                <input type="checkbox" checked class="mt-1 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300">
+                <span class="text-xs text-slate-700">Approve final grid synchronization protocol with Regional Load Dispatch Centre (RLDC).</span>
+              </label>
+              <label class="flex items-start gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer border border-transparent hover:border-slate-200/60">
+                <input type="checkbox" class="mt-1 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300">
+                <span class="text-xs text-slate-700">Authorize customs clearance release for remaining 25 MVA transformers arriving at dry port.</span>
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================= 2. INTERACTIVE AI CHAT (30% width) ================= -->
+    <section class="w-full lg:w-[32%] xl:w-[30%] flex flex-col glass-panel rounded-3xl relative overflow-hidden border border-white/95 shadow-xl">
+      
+      <!-- Chat Header -->
+      <div class="p-4 border-b border-slate-100/80 flex items-center justify-between bg-white/40 backdrop-blur-md">
+        <div class="flex items-center gap-3">
+          <div class="relative w-8 h-8 rounded-xl brand-gradient flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+            <!-- Sparkle icon -->
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+            </svg>
+            <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-white"></span>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <h3 class="font-bold text-slate-900 text-sm tracking-tight" id="chat-title">URANOS Copilot</h3>
+              <span class="text-[9px] font-mono uppercase px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-600 font-bold">GPT-4o Solar</span>
+            </div>
+            <p class="text-[11px] text-slate-400">Contextual Solar Site Assistant</p>
+          </div>
+        </div>
+
+        <!-- Chat Options -->
+        <div class="flex items-center gap-1">
+          <button title="Clear Context" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+          </button>
+          <button title="Model Settings" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Messages Stream (Scrollable) -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-4 text-xs" id="chat-messages">
+        
+        <!-- Timestamp badge -->
+        <div class="flex justify-center">
+          <span class="text-[10px] text-slate-400 bg-white/60 px-2.5 py-0.5 rounded-full border border-slate-200/50 font-mono">Today • 11:24 AM</span>
+        </div>
+
+        <!-- AI Welcome Message -->
+        <div class="flex items-start gap-2.5">
+          <div class="w-6 h-6 rounded-lg brand-gradient flex items-center justify-center text-white shrink-0 mt-0.5 shadow-xs">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <div class="space-y-1 max-w-[85%]">
+            <div class="p-3.5 rounded-2xl rounded-tl-sm bg-white border border-slate-100 shadow-sm text-slate-700 leading-relaxed">
+              <div class="flex items-center gap-1.5 mb-1 text-slate-900 font-semibold text-[11px]">
+                <span>✨ URANOS Intelligence</span>
+              </div>
+              Good morning! Helios Farm Phase IV is at <strong class="text-indigo-600">74.8% completion</strong>. I've detected a thermal anomaly in inverter <span class="font-mono font-semibold text-slate-800">INV-042</span> and automatically scheduled inspection. How can I assist your executive review today?
+            </div>
+            <span class="text-[10px] text-slate-400 block px-1">11:24 AM</span>
+          </div>
+        </div>
+
+        <!-- User Message (Deep Indigo to Vivid Violet Gradient) -->
+        <div class="flex items-start justify-end gap-2.5">
+          <div class="space-y-1 max-w-[85%] text-end">
+            <div class="p-3.5 rounded-2xl brand-gradient text-white shadow-md shadow-indigo-500/15 leading-relaxed font-medium text-start chat-user-tail">
+              Can you run a simulation on the revenue impact if the grid connection is delayed by 10 days?
+            </div>
+            <span class="text-[10px] text-slate-400 block px-1">11:26 AM • Delivered</span>
+          </div>
+          <div class="w-6 h-6 rounded-full bg-slate-900 flex items-center justify-center text-white text-[10px] font-bold shrink-0 mt-0.5">
+            AL
+          </div>
+        </div>
+
+        <!-- AI Bubble (Pristine White with Sparkle Icon) -->
+        <div class="flex items-start gap-2.5">
+          <div class="w-6 h-6 rounded-lg brand-gradient flex items-center justify-center text-white shrink-0 mt-0.5 shadow-xs">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+            </svg>
+          </div>
+          <div class="space-y-1.5 max-w-[88%]">
+            <div class="p-3.5 rounded-2xl rounded-tl-sm bg-white border border-slate-100 shadow-sm text-slate-700 leading-relaxed">
+              <div class="flex items-center gap-1.5 mb-1.5 text-slate-900 font-semibold text-[11px]">
+                <span class="text-amber-500">✨</span>
+                <span>Financial Impact Simulation</span>
+              </div>
+              <p class="mb-2">Simulated 10-day delay past June 18 under seasonal P50 solar irradiance:</p>
+              
+              <!-- Mini table within AI response -->
+              <div class="rounded-xl bg-slate-50/80 p-2.5 border border-slate-100 font-mono text-[11px] space-y-1.5 mb-2">
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Uncaptured Energy:</span>
+                  <span class="font-bold text-slate-800">14,200 MWh</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">PPA Revenue Loss:</span>
+                  <span class="font-bold text-rose-600">-$411,800 USD</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Liquidated Damages:</span>
+                  <span class="font-bold text-amber-600">$0 (Within Grace)</span>
+                </div>
+              </div>
+              <p class="text-[11px] text-slate-500">
+                💡 <strong class="text-slate-700">Mitigation Strategy:</strong> Pre-commissioning Substation 1 allows partial export of 180 MW, recovering ~52% of potential revenue.
+              </p>
+            </div>
+            
+            <!-- Quick Action Pills -->
+            <div class="flex flex-wrap gap-1.5 ps-1">
+              <button onclick="sendQuickPrompt('Generate detailed delay mitigation memo')" class="px-2.5 py-1 rounded-full bg-white/90 border border-slate-200/80 text-[11px] text-indigo-700 font-medium hover:bg-indigo-50/80 transition-colors shadow-2xs">
+                📄 Generate Mitigation Memo
+              </button>
+              <button onclick="sendQuickPrompt('Show Substation 1 readiness')" class="px-2.5 py-1 rounded-full bg-white/90 border border-slate-200/80 text-[11px] text-slate-600 hover:text-slate-900 transition-colors shadow-2xs">
+                ⚡ Check Substation 1
+              </button>
+            </div>
+            
+            <span class="text-[10px] text-slate-400 block px-1">11:27 AM</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= INPUT DOCK (Floating Pill Anchored at Bottom) ================= -->
+      <div class="p-3.5 bg-gradient-to-t from-white/90 via-white/70 to-transparent backdrop-blur-md border-t border-white/60">
+        <form id="chatForm" onsubmit="handleChatSubmit(event)" class="relative flex items-center">
+          
+          <div class="w-full flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-white/95 border border-slate-200/80 shadow-lg shadow-indigo-500/5 focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100 transition-all duration-300">
+            
+            <!-- Attachment / Context Button -->
+            <button type="button" class="p-1 text-slate-400 hover:text-indigo-600 transition-colors rounded-full" title="Attach telemetry or file">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+              </svg>
+            </button>
+
+            <!-- Pill Input Field -->
+            <input 
+              type="text" 
+              id="chatInput" 
+              placeholder="Ask URANOS Copilot or query project metrics..." 
+              autocomplete="off"
+              class="w-full bg-transparent text-xs text-slate-800 placeholder-slate-400 focus:outline-none"
+            >
+
+            <!-- Mic / Speech Button -->
+            <button type="button" class="p-1 text-slate-400 hover:text-slate-700 transition-colors" title="Voice Input">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+              </svg>
+            </button>
+
+            <!-- Circular, Brightly Glowing Gradient "Send" Button -->
+            <button 
+              type="submit" 
+              id="sendBtn"
+              class="w-8 h-8 rounded-full brand-gradient text-white flex items-center justify-center shrink-0 shadow-md shadow-indigo-500/40 hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none ring-2 ring-white"
+              title="Send Prompt"
+            >
+              <svg class="w-4 h-4 transform rotate-45 rtl:-rotate-135 -translate-y-0.5 translate-x-0.5 rtl:translate-x-0 rtl:translate-y-0" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+              </svg>
+            </button>
+
+          </div>
+        </form>
+
+        <!-- Prompt suggestions tag list -->
+        <div class="flex items-center justify-between mt-2 px-2 text-[10px] text-slate-400 font-medium">
+          <span>Press <kbd class="px-1 py-0.5 rounded bg-slate-100 font-mono text-[9px]">Enter</kbd> to ask</span>
+          <span class="flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            Telemetry Synced
+          </span>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================= JAVASCRIPT: LTR / RTL DYNAMICS & INTERACTION ================= -->
+  <script>
+    // Language & Direction Switcher
+    function setDirection(dir) {
+      const html = document.documentElement;
+      const btnLtr = document.getElementById('btn-ltr');
+      const btnRtl = document.getElementById('btn-rtl');
+      
+      html.setAttribute('dir', dir);
+      
+      if (dir === 'rtl') {
+        html.setAttribute('lang', 'ar');
+        // Toggle button states
+        btnRtl.className = "px-2.5 py-1 text-xs font-semibold rounded-lg transition-all duration-200 bg-white text-indigo-700 shadow-sm shadow-indigo-100";
+        btnLtr.className = "px-2.5 py-1 text-xs font-semibold rounded-lg transition-all duration-200 text-slate-500 hover:text-slate-900";
+        
+        // Translate key UI elements for complete RTL authenticity
+        document.getElementById('dash-heading').textContent = 'مركز العمليات التنفيذي';
+        document.getElementById('doc-title').textContent = 'موجز المشروع التنفيذي والتحليل الشامل';
+        document.getElementById('chat-title').textContent = 'مساعد يورانوس الذكي';
+        document.getElementById('chatInput').placeholder = 'اسأل مساعد يورانوس أو استعلم عن مقاييس المشروع...';
+        document.getElementById('sec1-head').textContent = '١. وتيرة البناء وتشغيل المحطة الفرعية';
+        document.getElementById('sec2-head').textContent = '٢. تخفيف آثار الطقس وتحسين المتتبعات الديناميكية';
+        document.getElementById('sec1-p').innerHTML = 'لا يزال المشروع متقدماً على الجدول الزمني بمقدار <strong class="text-slate-900 font-semibold">+٣.٤ أيام</strong>. اكتملت أعمال تثبيت هياكل التثبيت بنسبة ٩١٪، مع تركيب ٣٨٥,٠٠٠ لوح شمسي ثنائي الأوجه. اكتملت اختبارات الربط لخط النقل المركزي دون أي فروق طورية، مما يضمن بدء التشغيل التجريبي في <span class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded text-indigo-700 font-semibold">١٨ يونيو ٢٠٢٥</span>.';
+        document.getElementById('sec2-p').innerHTML = 'سجلت مصفوفات أجهزة استشعار الرياح في القطاع C هبات بلغت ٤٨ كم/ساعة. أمرت خوارزمية يورانوس الذاتية طاولات التتبع أحادية المحور بالانتقال إلى وضع الأمان الأفقي، مما وفر حماية للإيرادات تقدر بنحو <span class="text-emerald-600 font-medium">٤٢,٣٠٠ دولار أمريكي</span> مقارنة بالجداول التقليدية.';
+      } else {
+        html.setAttribute('lang', 'en');
+        btnLtr.className = "px-2.5 py-1 text-xs font-semibold rounded-lg transition-all duration-200 bg-white text-indigo-700 shadow-sm shadow-indigo-100";
+        btnRtl.className = "px-2.5 py-1 text-xs font-semibold rounded-lg transition-all duration-200 text-slate-500 hover:text-slate-900";
+        
+        // Restore English
+        document.getElementById('dash-heading').textContent = 'Executive Operations Hub';
+        document.getElementById('doc-title').textContent = 'Executive Project Briefing & Synthesis';
+        document.getElementById('chat-title').textContent = 'URANOS Copilot';
+        document.getElementById('chatInput').placeholder = 'Ask URANOS Copilot or query project metrics...';
+        document.getElementById('sec1-head').textContent = '1. Construction Pace & Substation Energization';
+        document.getElementById('sec2-head').textContent = '2. Weather Mitigation & Dynamic Tracker Optimization';
+        document.getElementById('sec1-p').innerHTML = 'The project remains comfortably ahead of schedule by <strong class="text-slate-900 font-semibold">+3.4 days</strong>. Mounting structure installations across Blocks B1 through B6 are 91% complete, with 385,000 bifacial monocrystalline modules mounted. Main 220kV transmission line tie-in tests with the central grid authority completed with zero phase discrepancies, ensuring that trial energization will commence exactly on <span class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded text-indigo-700 font-semibold">June 18, 2025</span>.';
+        document.getElementById('sec2-p').innerHTML = 'Wind sensor arrays in Sector C registered peak gusts of 48 km/h between 09:30 and 11:15 UTC. The URANOS autonomous algorithm automatically commanded single-axis tracking tables into the safe 0° horizontal stow position, avoiding structural fatigue. Lost solar capture was restricted to only <strong class="text-slate-900 font-semibold">18.5 total generation hours</strong>, yielding an estimated revenue protection of <span class="text-emerald-600 font-medium">$42,300 USD</span> compared to legacy fixed schedules.';
+      }
+    }
+
+    // Dynamic Chat Interaction Handler
+    function handleChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendUserMessage(text);
+      input.value = '';
+
+      // Simulate Copilot Thinking & Instant Responsive Reply
+      setTimeout(() => {
+        appendAiResponse(text);
+      }, 700);
+    }
+
+    function sendQuickPrompt(promptText) {
+      appendUserMessage(promptText);
+      setTimeout(() => {
+        appendAiResponse(promptText);
+      }, 600);
+    }
+
+    function appendUserMessage(text) {
+      const chatMessages = document.getElementById('chat-messages');
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      
+      const userDiv = document.createElement('div');
+      userDiv.className = 'flex items-start justify-end gap-2.5 animate-fade-in';
+      userDiv.innerHTML = `
+        <div class="space-y-1 max-w-[85%] text-end">
+          <div class="p-3.5 rounded-2xl brand-gradient text-white shadow-md shadow-indigo-500/15 leading-relaxed font-medium text-start chat-user-tail">
+            ${escapeHtml(text)}
+          </div>
+          <span class="text-[10px] text-slate-400 block px-1">${time} • Sent</span>
+        </div>
+        <div class="w-6 h-6 rounded-full bg-slate-900 flex items-center justify-center text-white text-[10px] font-bold shrink-0 mt-0.5">
+          AL
+        </div>
+      `;
+      chatMessages.appendChild(userDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function appendAiResponse(query) {
+      const chatMessages = document.getElementById('chat-messages');
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
+
+      const responseDiv = document.createElement('div');
+      responseDiv.className = 'flex items-start gap-2.5 animate-fade-in';
+      
+      let replyHtml = '';
+      if (query.toLowerCase().includes('memo') || query.includes('تخفيف')) {
+        replyHtml = isRTL 
+          ? 'تم تجميع مذكرة التخفيف الخاصة بالمشروع متضمنة تفاصيل تصاريح الهيئة وحماية التدفقات المالية. يمكنك تحميلها كملف PDF تنفيذي من الزاوية العلوية.'
+          : 'I have compiled the executive mitigation memo regarding the energization schedule, including grid variance allowances. The dossier is ready for board signature.';
+      } else if (query.toLowerCase().includes('substation') || query.includes('محطة')) {
+        replyHtml = isRTL
+          ? 'المحطة الفرعية رقم ١ جاهزة بنسبة ٩٨٪ للتزامن مع الشبكة الوطنية. تم فحص قواطع الدائرة والمحولات الرئيسية بنجاح.'
+          : 'Substation 1 is at 98% energization readiness. Transformer oil DGA analysis confirmed optimal purity, and telemetry links to the National Dispatch are active.';
+      } else {
+        replyHtml = isRTL
+          ? `قامت نماذج يورانوس بمعالجة طلبك: "${escapeHtml(query)}". ترتبط كافة بيانات المحطة الشمسية بالحسابات التحليلية للمشروع.`
+          : `Synthesizing real-time telemetry against "${escapeHtml(query)}". The project neural model projects consistent uptime across all 450 MWp strings.`;
+      }
+
+      responseDiv.innerHTML = `
+        <div class="w-6 h-6 rounded-lg brand-gradient flex items-center justify-center text-white shrink-0 mt-0.5 shadow-xs">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+          </svg>
+        </div>
+        <div class="space-y-1.5 max-w-[88%]">
+          <div class="p-3.5 rounded-2xl rounded-tl-sm bg-white border border-slate-100 shadow-sm text-slate-700 leading-relaxed">
+            <div class="flex items-center gap-1.5 mb-1 text-slate-900 font-semibold text-[11px]">
+              <span class="text-amber-500">✨</span>
+              <span>URANOS Telemetry Copilot</span>
+            </div>
+            <p>${replyHtml}</p>
+          </div>
+          <span class="text-[10px] text-slate-400 block px-1">${time}</span>
+        </div>
+      `;
+      chatMessages.appendChild(responseDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>

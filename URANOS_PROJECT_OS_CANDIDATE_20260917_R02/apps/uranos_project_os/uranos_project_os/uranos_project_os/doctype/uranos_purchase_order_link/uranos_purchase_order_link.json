@@ -1,0 +1,27 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Purchase Order Link",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 1,
+  "field_order": [
+    "purchase_order"
+  ],
+  "fields": [
+    {
+      "fieldname": "purchase_order",
+      "label": "Purchase Order",
+      "fieldtype": "Link",
+      "options": "Purchase Order",
+      "reqd": 1
+    }
+  ],
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

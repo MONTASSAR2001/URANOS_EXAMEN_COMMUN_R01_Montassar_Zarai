@@ -1,0 +1,137 @@
+[
+  {
+    "uuid": "9e8f332d-6ca0-4105-b979-ba32b9d457bd",
+    "operation": "progress",
+    "project": "DEMO-PV-A",
+    "payload": {
+      "work_package": "DEMO-PV-A-WP030",
+      "activity": "BATTAGE",
+      "zone": "Z01",
+      "crew": "TEAM-DEMO",
+      "posting_date": "2026-09-28",
+      "qty_reported": "12",
+      "kit_issue": "DEMO-PV-A-ISSUE-1",
+      "baseline_version": "BASELINE-DEMO-V1"
+    },
+    "attachments": [
+      {
+        "filename": "preuve-demo.png",
+        "mime_type": "image/png",
+        "sha256": "2b4386b40c5652cfa855b877aece326e602c2d7ad384fa7d844fa52af2198d57",
+        "content_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGMQsq8CAAEyAMxInoTCAAAAAElFTkSuQmCC"
+      }
+    ],
+    "base_modified": "2026-09-16 10:00:00"
+  },
+  {
+    "uuid": "ee51c000-1519-477c-993a-21a976144977",
+    "operation": "inspection",
+    "project": "DEMO-PV-A",
+    "payload": {
+      "work_package": "DEMO-PV-A-WP030",
+      "zone": "Z01",
+      "inspection_type": "PILING",
+      "posting_date": "2026-09-28",
+      "checks": [
+        {
+          "check": "PROC-DEMO-1",
+          "result": "Pass"
+        }
+      ]
+    },
+    "attachments": [],
+    "base_modified": "2026-09-16 10:00:00"
+  },
+  {
+    "uuid": "10c6fe05-4440-48f5-9db3-e965e999a517",
+    "operation": "kit_return",
+    "project": "DEMO-PV-A",
+    "payload": {
+      "kit_issue": "ISSUE-DEMO",
+      "to_warehouse": "DEMO-PV-A-Available",
+      "returns": [
+        {
+          "item_code": "BOLT-DEMO",
+          "qty": "4",
+          "uom": "Nos"
+        }
+      ]
+    },
+    "attachments": [],
+    "base_modified": null
+  },
+  {
+    "uuid": "f9c2267a-f450-47c5-9338-eb699c9453b8",
+    "operation": "kit_request",
+    "project": "DEMO-PV-A",
+    "payload": {
+      "work_package": "DEMO-PV-A-WP030",
+      "kit_template": "DEMO-PV-A-KIT",
+      "qty_kits": "2",
+      "from_warehouse": "DEMO-PV-A-Available",
+      "to_warehouse": "DEMO-PV-A-WIP",
+      "activity": "STRUCTURE",
+      "crew": "TEAM-DEMO"
+    },
+    "attachments": [],
+    "base_modified": "2026-09-16 10:00:00"
+  },
+  {
+    "uuid": "4e98f43d-c90e-46f2-832e-2d52254b330c",
+    "operation": "daily_report",
+    "project": "DEMO-PV-A",
+    "payload": {
+      "posting_date": "2026-09-28",
+      "site": "SITE-DEMO",
+      "manpower": 8,
+      "equipment": "ENGIN-DEMO",
+      "weather": "Clair"
+    },
+    "attachments": [],
+    "base_modified": null
+  },
+  {
+    "uuid": "e379953e-b540-43bd-85dd-35e9c7ae319a",
+    "operation": "progress",
+    "project": "DEMO-PV-A",
+    "payload": {
+      "work_package": "DEMO-PV-A-WP030",
+      "activity": "CABLE",
+      "zone": "Z01",
+      "crew": "TEAM-DEMO",
+      "posting_date": "2026-09-28",
+      "qty_reported": "2",
+      "cable_reel": "DEMO-PV-A-REEL-1",
+      "baseline_version": "BASELINE-DEMO-V1"
+    },
+    "attachments": [],
+    "base_modified": "2026-09-16 10:00:00"
+  },
+  {
+    "uuid": "17656400-2301-44c2-a70c-da0ce49c4e37",
+    "operation": "progress",
+    "project": "DEMO-PV-A",
+    "payload": {
+      "work_package": "DEMO-PV-A-WP030",
+      "activity": "NO-ALLOCATION",
+      "zone": "Z01",
+      "crew": "TEAM-DEMO",
+      "posting_date": "2026-09-28",
+      "qty_reported": "1",
+      "baseline_version": "BASELINE-DEMO-V1"
+    },
+    "attachments": [],
+    "base_modified": "2026-09-16 10:00:00"
+  },
+  {
+    "uuid": "cde3debf-9c9d-4921-b6bb-77d9efba4c79",
+    "operation": "daily_report",
+    "project": "DEMO-PV-A",
+    "payload": {
+      "posting_date": "2026-09-28",
+      "site": "RACE-DEMO"
+    },
+    "attachments": [],
+    "base_modified": null
+  }
+]

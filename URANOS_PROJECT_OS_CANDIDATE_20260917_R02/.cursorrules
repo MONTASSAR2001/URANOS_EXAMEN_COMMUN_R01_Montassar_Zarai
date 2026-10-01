@@ -1,0 +1,22 @@
+# URANOS Project OS — AI Rules & Constraints
+
+# 1. ARCHITECTURE BOUNDARIES (HEXAGONAL ARCHITECTURE)
+- RULE: NEVER import `frappe` inside the `domain/` directory (`apps/uranos_project_os/uranos_project_os/domain/`).
+- RULE: The `domain/` directory must only use pure Python (`dataclasses`, `Decimal`, `enum`, standard library).
+- RULE: All database writes and state transitions MUST be executed in the `services/` directory and MUST be wrapped in the `with authorized_transition():` context manager.
+- RULE: Enforce pessimistic locking (`for_update=True` via `scoped_doc(..., lock=True)`) in all service functions before modifying documents. Always lock the parent `Project` before the specific document.
+
+# 2. NUMERIC & DATA INTEGRITY
+- RULE: NEVER use `float` or native float arithmetic for progress, quantities, or financial amounts. Always use `Decimal`.
+- RULE: Do not invent default values or assume zeros for missing data; missing data is `A COMPLETER` or `None`.
+- RULE: Hard deletion is strictly forbidden (`on_trash` must prevent operational deletion). Use auditable cancellation.
+
+# 3. SECURITY & ACCESS CONTROL
+- RULE: Multi-project isolation is fail-closed. Explicit `Project User Permission` is required. Never bypass `security.require_project()`.
+- RULE: Financial roles (`URANOS Executive`, `URANOS Finance Controller`) are required for financial data. Non-financial users must never receive cost or rate fields.
+- RULE: Evidence files must be private, local uploads under `/private/files/` and attached exclusively to the owning project records.
+
+# 4. BLOCAGES (ISSUES) MODULE INVARIANTS
+- RULE: Blocker workflow must adhere strictly to: `Open` -> `In Progress` -> `Pending Verification` -> `Closed`.
+- RULE: "No Self-Verification": The user who submitted the resolution (`resolved_by`) MUST NOT be the one who closes/verifies it (`closed_by`).
+- RULE: Blocker resolution submission must remain visible as an active risk until an independent coordinator verifies and closes it.

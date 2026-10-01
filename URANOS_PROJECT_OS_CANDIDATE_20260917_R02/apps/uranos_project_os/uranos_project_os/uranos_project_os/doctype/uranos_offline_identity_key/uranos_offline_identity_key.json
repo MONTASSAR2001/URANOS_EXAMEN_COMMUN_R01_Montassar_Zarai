@@ -1,0 +1,36 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Offline Identity Key",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 0,
+  "field_order": [
+    "user",
+    "encryption_key"
+  ],
+  "fields": [
+    {
+      "fieldname": "user",
+      "label": "User",
+      "fieldtype": "Link",
+      "options": "User",
+      "reqd": 1,
+      "unique": 1
+    },
+    {
+      "fieldname": "encryption_key",
+      "label": "Encryption Key",
+      "fieldtype": "Password",
+      "reqd": 1,
+      "no_copy": 1
+    }
+  ],
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

@@ -1,0 +1,40 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Document Requirement",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 1,
+  "field_order": [
+    "document_code",
+    "required_status",
+    "mandatory"
+  ],
+  "fields": [
+    {
+      "fieldname": "document_code",
+      "label": "Document Code",
+      "fieldtype": "Data",
+      "reqd": 1
+    },
+    {
+      "fieldname": "required_status",
+      "label": "Required Status",
+      "fieldtype": "Data",
+      "default": "IFC"
+    },
+    {
+      "fieldname": "mandatory",
+      "label": "Mandatory",
+      "fieldtype": "Check",
+      "default": "1"
+    }
+  ],
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

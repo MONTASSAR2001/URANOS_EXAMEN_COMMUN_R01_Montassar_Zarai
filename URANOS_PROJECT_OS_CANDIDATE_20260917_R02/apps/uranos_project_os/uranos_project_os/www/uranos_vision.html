@@ -1,0 +1,1315 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="csrf-token" content="{{ csrf_token | default('') | e }}">
+  <title>{{ title | default('URANOS Vision · Jumeau Numérique 3D & Supervision Solaire') | e }}</title>
+  <meta name="description" content="{{ meta_description | default('Plateforme 3D temps-réel de supervision des centrales solaires photovoltaïques et gouvernance des obstacles.') | e }}">
+
+  <!-- Google Fonts: Space Grotesk + Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Three.js CDN for WebGL presentation layer -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    /* ==========================================================================
+       URANOS 3D Vision Portal — Crisp Swiss Pure White / Light Monochrome
+       ========================================================================== */
+    :root {
+      --bg-space: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.90);
+      --bg-card-hover: rgba(255, 255, 255, 0.98);
+      --border-card: rgba(0, 0, 0, 0.09);
+      --border-subtle: rgba(0, 0, 0, 0.06);
+      --border-focus: #111827;
+      
+      --text-main: #111827;
+      --text-secondary: #374151;
+      --text-muted: #6b7280;
+      --text-inverse: #ffffff;
+
+      --mono-black: #000000;
+      --mono-charcoal: #18181b;
+      --mono-slate: #4b5563;
+      --mono-silver: #e4e4e7;
+      --mono-light: #f4f4f5;
+
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-display: 'Space Grotesk', var(--font-body);
+      --blur: blur(24px);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-space);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* ==========================================================================
+       1. Atmospheric AI Energy Looping Background Video (Light Theme Blend)
+       ========================================================================== */
+    .video-atmosphere {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+      background: #ffffff;
+    }
+
+    .bg-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+      opacity: 0.16; /* Soft airy atmospheric blend */
+      filter: grayscale(100%) contrast(120%) brightness(1.15);
+      transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .bg-video.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .video-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.85) 70%, #ffffff 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .video-grid-scan {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* ==========================================================================
+       2. 3D WebGL Canvas Layer
+       ========================================================================== */
+    #uranos-3d-scene {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 2;
+      outline: none;
+      display: block;
+    }
+
+    /* ==========================================================================
+       3. HUD Content Overlay (Light Minimalist Glassmorphism)
+       ========================================================================== */
+    .hud-overlay {
+      position: relative;
+      z-index: 10;
+      pointer-events: none;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.5rem 2rem;
+    }
+
+    .interactive {
+      pointer-events: auto;
+    }
+
+    /* Navigation Header */
+    header.hud-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-card);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 0.85rem 1.75rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: #111827;
+      border: 1px solid #111827;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.15rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .brand-titles h2 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      letter-spacing: 1.2px;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+    }
+
+    .brand-titles h2 span {
+      color: #111827;
+      font-size: 0.82rem;
+      background: rgba(0, 0, 0, 0.06);
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .brand-titles p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      letter-spacing: 0.4px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-hud {
+      background: rgba(0, 0, 0, 0.04);
+      color: var(--text-main);
+      border: 1px solid var(--border-card);
+      padding: 0.55rem 1.1rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.2s ease;
+      backdrop-filter: var(--blur);
+    }
+
+    .btn-hud:hover {
+      background: #111827;
+      border-color: #111827;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: #111827;
+      border-color: #111827;
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn-primary:hover {
+      background: #000000;
+      color: #ffffff;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Main Section Layout */
+    .hero-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 1.5rem;
+      align-items: start;
+      margin-top: 1.5rem;
+    }
+
+    @media (max-width: 1080px) {
+      .hero-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Hero Section */
+    .hero-hud {
+      background: var(--bg-card);
+      backdrop-filter: var(--blur);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 1.75rem 2rem;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #111827;
+      box-shadow: 0 0 6px rgba(17, 24, 39, 0.4);
+      animation: pulse-light 2s infinite;
+    }
+
+    @keyframes pulse-light {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(1.3); }
+    }
+
+    .hero-hud h1 {
+      font-family: var(--font-display);
+      font-size: 2.1rem;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 0.85rem;
+      color: #111827;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-hud p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 1.25rem;
+    }
+
+    /* 3D Viewport Controls Strip */
+    .viewport-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+      background: rgba(244, 244, 245, 0.9);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 0.55rem 0.85rem;
+      margin-top: 1rem;
+    }
+
+    .control-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-right: 0.35rem;
+      font-weight: 600;
+    }
+
+    .btn-pill {
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      color: var(--text-main);
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-pill:hover, .btn-pill.active {
+      background: #111827;
+      border-color: #111827;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    /* AI Live Energy Video Monitor Card (PIP HUD) */
+    .ai-monitor-card {
+      background: var(--bg-card);
+      backdrop-filter: var(--blur);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 1.25rem;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .ai-monitor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .ai-monitor-title {
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .ai-live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #111827;
+      letter-spacing: 0.5px;
+    }
+
+    .ai-video-frame {
+      position: relative;
+      width: 100%;
+      height: 160px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      background: #f4f4f5;
+    }
+
+    .ai-pip-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%) contrast(125%) brightness(1.05);
+    }
+
+    .ai-video-overlay-hud {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 0.6rem;
+      background: linear-gradient(180deg, rgba(255,255,255,0.7) 0%, transparent 40%, rgba(255,255,255,0.8) 100%);
+    }
+
+    .ai-hud-tag {
+      font-family: monospace;
+      font-size: 0.65rem;
+      color: #111827;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 2px 6px;
+      border-radius: 3px;
+      align-self: flex-start;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      font-weight: 600;
+    }
+
+    .ai-monitor-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-monitor {
+      flex: 1;
+      padding: 0.45rem 0.5rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      background: #ffffff;
+      color: var(--text-main);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .btn-monitor:hover, .btn-monitor.active {
+      background: #111827;
+      color: #ffffff;
+      border-color: #111827;
+    }
+
+    /* KPI Metrics Cards Grid (Light Theme) */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin: 1.75rem 0;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      backdrop-filter: var(--blur);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 1.25rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0, 0, 0, 0.25);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .kpi-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, #111827 0%, rgba(17, 24, 39, 0.15) 100%);
+    }
+
+    .kpi-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .kpi-title {
+      font-size: 0.73rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+    }
+
+    .kpi-val {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+      color: #111827;
+    }
+
+    .kpi-desc {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    /* Live Drawer: Recent Blockers Table */
+    .drawer-hud {
+      background: var(--bg-card);
+      backdrop-filter: var(--blur);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .drawer-header h3 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+    }
+
+    .blocker-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .blocker-table th {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .blocker-table td {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      color: var(--text-main);
+    }
+
+    .blocker-table tr:hover td {
+      background: rgba(0, 0, 0, 0.025);
+    }
+
+    /* Light Monochrome Badges */
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-critical {
+      background: #111827;
+      color: #ffffff;
+      border: 1px solid #111827;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .badge-high {
+      background: #f4f4f5;
+      color: #111827;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .badge-medium {
+      background: #f4f4f5;
+      color: #4b5563;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    .badge-low {
+      background: #ffffff;
+      color: #6b7280;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .status-open {
+      color: #111827;
+      font-weight: 700;
+    }
+
+    .status-in-progress {
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .status-pending {
+      color: #6b7280;
+      font-style: italic;
+    }
+
+    .status-closed {
+      color: #9ca3af;
+      text-decoration: line-through;
+    }
+
+    /* Footer HUD */
+    footer.hud-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: var(--blur);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    }
+
+    .footer-tags {
+      display: flex;
+      gap: 1.25rem;
+    }
+
+    .tag-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .tag-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #111827;
+      box-shadow: 0 0 4px rgba(17, 24, 39, 0.3);
+    }
+
+    /* 3D Telemetry Tooltip on Hover (Light Crisp Theme) */
+    #node-tooltip {
+      position: absolute;
+      display: none;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid #111827;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.8rem;
+      color: #111827;
+      pointer-events: none;
+      backdrop-filter: var(--blur);
+      transition: opacity 0.15s ease;
+      min-width: 190px;
+    }
+
+    #node-tooltip h4 {
+      font-family: var(--font-display);
+      color: #111827;
+      margin-bottom: 0.25rem;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+    }
+
+    #node-tooltip #tooltip-body {
+      color: #4b5563;
+    }
+
+    @media (max-width: 900px) {
+      .hud-overlay { padding: 1rem; }
+      .hero-hud h1 { font-size: 1.6rem; }
+      .kpi-row { grid-template-columns: 1fr 1fr; }
+      .footer-tags { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       Atmospheric AI Energy Looping Background Video (Light Mode)
+       ========================================================================== -->
+  <div class="video-atmosphere" id="video-atmosphere" aria-hidden="true">
+    <!-- Video 1: AI Solar Energy Power Station -->
+    <video id="bg-video-solar" class="bg-video" autoplay loop muted playsinline>
+      <source src="/assets/uranos_project_os/videos/solar_energy.webm" type="video/webm">
+      <source src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Solar_power_station_MIC%2C_3D-animation.webm" type="video/webm">
+    </video>
+    <!-- Video 2: AI Wind Turbines Farm -->
+    <video id="bg-video-wind" class="bg-video hidden" autoplay loop muted playsinline>
+      <source src="/assets/uranos_project_os/videos/wind_turbines.webm" type="video/webm">
+      <source src="https://upload.wikimedia.org/wikipedia/commons/2/2b/360_degree_view_Wind_Turbine_Maldegem.webm" type="video/webm">
+    </video>
+    <!-- Light Mode Atmospheric Vignette & Subtle Grid -->
+    <div class="video-vignette"></div>
+    <div class="video-grid-scan"></div>
+  </div>
+
+  <!-- ==========================================================================
+       Three.js 3D WebGL Canvas Layer (Digital Twin Core Engine)
+       ========================================================================== -->
+  <canvas id="uranos-3d-scene" aria-label="Scène 3D interactive du parc photovoltaïque URANOS"></canvas>
+
+  <!-- Interactive 3D Node Tooltip -->
+  <div id="node-tooltip">
+    <h4 id="tooltip-title">PV-01</h4>
+    <div id="tooltip-body">Centrale Solaire · 1.0 MWc</div>
+    <div id="tooltip-status" style="margin-top: 4px; font-weight: 600;">Statut: Nominal</div>
+  </div>
+
+  <!-- HUD Interface Content -->
+  <div class="hud-overlay">
+
+    <!-- Top Navigation Header -->
+    <header class="hud-nav interactive">
+      <div class="brand-block">
+        <div class="brand-badge">U</div>
+        <div class="brand-titles">
+          <h2>URANOS <span>VISION 3D</span></h2>
+          <p>Supervision Géoréférencée des Centrales Solaires · Règle d'Or ISO</p>
+        </div>
+      </div>
+      <nav class="nav-actions" aria-label="Navigation principale">
+        <a href="/app/blocker-dashboard" class="btn-hud btn-primary" id="btn-kanban">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="10" rx="1"/></svg>
+          Tableau Kanban Frappe
+        </a>
+        <a href="/app/project" class="btn-hud" id="btn-projects">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          Projets ({{ total_projects }})
+        </a>
+        <a href="/uranos" class="btn-hud" id="btn-pwa">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          PWA Chantier
+        </a>
+      </nav>
+    </header>
+
+    <!-- Main Hero Presentation -->
+    <main>
+      <div class="hero-layout">
+        <!-- Hero HUD Card -->
+        <section class="hero-hud interactive" aria-labelledby="main-heading">
+          <div class="hero-eyebrow">
+            <span class="pulse-dot"></span>
+            Télémétrie Opérationnelle en Direct · Architecture Hexagonale
+          </div>
+          <h1 id="main-heading">Jumeau Numérique 3D & Supervision des Obstacles</h1>
+          <p>
+            Pilotage centralisé du portefeuille des <strong>{{ total_projects }} parcs solaires photovoltaïques</strong>.
+            Traçabilité immuable des blocages de chantier, verrouillage pessimiste des transitions d'état
+            et stricte application de la <strong>Règle d'Or (indépendance de vérification)</strong>.
+          </p>
+
+          <!-- 3D Camera & Presentation Controls -->
+          <div class="viewport-controls" role="toolbar" aria-label="Contrôles du visualiseur 3D">
+            <span class="control-label">Caméra:</span>
+            <button type="button" class="btn-pill active" id="cam-overview">Vue Aérienne</button>
+            <button type="button" class="btn-pill" id="cam-focus-pv01">Focus PV-01</button>
+            <button type="button" class="btn-pill" id="cam-focus-critical">Focus Alertes</button>
+            <button type="button" class="btn-pill" id="toggle-orbit">Pause Rotation</button>
+            <button type="button" class="btn-pill" id="toggle-wireframe">Mode Fil de Fer</button>
+          </div>
+        </section>
+
+        <!-- Live AI Energy PIP Monitor Widget -->
+        <aside class="ai-monitor-card interactive" aria-label="Flux Énergétique IA">
+          <div class="ai-monitor-header">
+            <div class="ai-monitor-title">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              Flux IA Énergie
+            </div>
+            <div class="ai-live-badge">
+              <span class="pulse-dot" style="width: 5px; height: 5px;"></span>
+              EN DIRECT
+            </div>
+          </div>
+
+          <div class="ai-video-frame">
+            <video id="pip-video-feed" class="ai-pip-video" autoplay loop muted playsinline>
+              <source src="/assets/uranos_project_os/videos/solar_energy.webm" type="video/webm">
+              <source src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Solar_power_station_MIC%2C_3D-animation.webm" type="video/webm">
+            </video>
+            <div class="ai-video-overlay-hud">
+              <span class="ai-hud-tag" id="feed-tag">SOURCE: CENTRALE SOLAIRE 3D</span>
+              <span class="ai-hud-tag" style="align-self: flex-end;">AI MODEL: RAG-GEN-01</span>
+            </div>
+          </div>
+
+          <div class="ai-monitor-controls">
+            <button type="button" class="btn-monitor active" id="btn-feed-solar">Solaire PV</button>
+            <button type="button" class="btn-monitor" id="btn-feed-wind">Éoliennes</button>
+            <button type="button" class="btn-monitor" id="btn-toggle-bg-video">Ambiance</button>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Live KPI Scorecards Grid (Pure White / Light Theme) -->
+      <section class="kpi-row interactive" aria-label="Indicateurs clés de performance">
+        <!-- KPI 1: Total Projects -->
+        <div class="kpi-card" id="kpi-projects">
+          <div class="kpi-header">
+            <span class="kpi-title">Projets Solaires</span>
+            <span class="badge" style="background: #111827; color: #ffffff;">{{ total_capacity_mw }} MWc</span>
+          </div>
+          <div class="kpi-val">{{ total_projects }}</div>
+          <div class="kpi-desc">{{ total_projects }} centrales solaires monitorées en temps réel</div>
+        </div>
+
+        <!-- KPI 2: Active Blockers -->
+        <div class="kpi-card" id="kpi-active">
+          <div class="kpi-header">
+            <span class="kpi-title">Blocages Actifs</span>
+            <span class="badge badge-high">En cours</span>
+          </div>
+          <div class="kpi-val">{{ active_blockers }}</div>
+          <div class="kpi-desc">Obstacles ouverts ou en cours de résolution</div>
+        </div>
+
+        <!-- KPI 3: Critical Severity -->
+        <div class="kpi-card" id="kpi-critical">
+          <div class="kpi-header">
+            <span class="kpi-title">Alertes Critiques</span>
+            <span class="badge badge-critical">Priorité 1</span>
+          </div>
+          <div class="kpi-val">{{ critical_active }}</div>
+          <div class="kpi-desc">Points d'arrêt immédiats nécessitant arbitrage</div>
+        </div>
+
+        <!-- KPI 4: Golden Rule Resolved -->
+        <div class="kpi-card" id="kpi-resolved">
+          <div class="kpi-header">
+            <span class="kpi-title">Résolus & Vérifiés</span>
+            <span class="badge badge-medium">Règle d'Or</span>
+          </div>
+          <div class="kpi-val">{{ resolved_blockers }}</div>
+          <div class="kpi-desc">Clôtures certifiées par un vérificateur indépendant</div>
+        </div>
+
+        <!-- KPI 5: Total Lost Hours -->
+        <div class="kpi-card" id="kpi-hours">
+          <div class="kpi-header">
+            <span class="kpi-title">Heures Perdues</span>
+            <span class="badge badge-low">Audit Terrain</span>
+          </div>
+          <div class="kpi-val">{{ total_lost_hours }} <span style="font-size: 1rem; color: var(--text-muted);">h</span></div>
+          <div class="kpi-desc">Temps d'arrêt tracé et imputé avec précision</div>
+        </div>
+      </section>
+
+      <!-- Live Recent Blockers Drawer -->
+      <section class="drawer-hud interactive" aria-labelledby="recent-heading">
+        <div class="drawer-header">
+          <h3 id="recent-heading">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Derniers Événements d'Obstacles sur les Chantiers Photovoltaïques
+          </h3>
+          <a href="/app/uranos-blocker" class="btn-hud" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">Voir tous les blocages →</a>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="blocker-table" id="table-recent-blockers">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Centrale</th>
+                <th>Titre de l'Obstacle</th>
+                <th>Discipline</th>
+                <th>Sévérité</th>
+                <th>Statut</th>
+                <th>Heures</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for b in recent_blockers %}
+              <tr>
+                <td><strong>{{ b.name }}</strong></td>
+                <td><span style="color: #111827; font-weight: 600;">{{ b.project }}</span></td>
+                <td>{{ b.title }}</td>
+                <td>{{ b.category }}</td>
+                <td>
+                  <span class="badge {% if b.severity == 'Critical' %}badge-critical{% elif b.severity == 'High' %}badge-high{% elif b.severity == 'Medium' %}badge-medium{% else %}badge-low{% endif %}">
+                    {{ b.severity }}
+                  </span>
+                </td>
+                <td>
+                  <span class="{% if b.status == 'Open' %}status-open{% elif b.status == 'In Progress' %}status-in-progress{% elif b.status == 'Pending Verification' %}status-pending{% else %}status-closed{% endif %}">
+                    {{ b.status }}
+                  </span>
+                </td>
+                <td>{{ b.lost_hours }} h</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom Footer Status -->
+    <footer class="hud-footer interactive">
+      <div>
+        <span>URANOS Project OS · Light Executive Edition · Frappe v16 Native</span>
+      </div>
+      <div class="footer-tags">
+        <div class="tag-item">
+          <span class="tag-dot"></span>
+          <span>Fail-Closed Security</span>
+        </div>
+        <div class="tag-item">
+          <span class="tag-dot"></span>
+          <span>Pessimistic Locking</span>
+        </div>
+        <div class="tag-item">
+          <span class="tag-dot"></span>
+          <span>Golden Rule Enforced</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Telemetry Data injected from Server Controller -->
+  <script id="projects-telemetry-data" type="application/json">
+    {{ projects_telemetry | default([]) | tojson }}
+  </script>
+
+  <!-- WebGL / Three.js 3D Digital Twin Engine (Light Theme & Crisp Grid) -->
+  <script>
+    (function () {
+      "use strict";
+
+      // 1. Data Retrieval
+      let telemetry = [];
+      try {
+        const raw = document.getElementById("projects-telemetry-data").textContent;
+        telemetry = JSON.parse(raw);
+      } catch (e) {
+        console.warn("Using fallback telemetry data", e);
+      }
+
+      // Fallback if empty
+      if (!telemetry || telemetry.length === 0) {
+        for (let i = 1; i <= 20; i++) {
+          const id = "PV-" + String(i).padStart(2, "0");
+          telemetry.push({
+            id: id,
+            name: id,
+            capacity_mw: 1.0,
+            active_blockers: i % 3,
+            critical_blockers: (i === 1 || i === 4 || i === 8 || i === 13) ? 1 : 0,
+            status: (i === 1 || i === 4 || i === 8 || i === 13) ? "Alert" : ((i % 3 > 0) ? "Warning" : "Nominal")
+          });
+        }
+      }
+
+      // 2. Three.js Scene Initialization (Pure White Background with Video Transparency)
+      const canvas = document.getElementById("uranos-3d-scene");
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0xffffff, 0.010);
+
+      const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 32, 55);
+
+      const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setClearColor(0xffffff, 0.50); // Crisp pure white base with gentle video pass-through
+
+      // 3. Crisp High-Key Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
+      scene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+      dirLight.position.set(40, 60, 30);
+      scene.add(dirLight);
+
+      const sunLight = new THREE.PointLight(0xffffff, 1.2, 300);
+      sunLight.position.set(-60, 80, -40);
+      scene.add(sunLight);
+
+      // 4. Digital Terrain Grid (Charcoal / Slate lines for high visibility on White)
+      const gridHelper = new THREE.GridHelper(120, 60, 0x4b5563, 0xd1d5db);
+      gridHelper.position.y = -0.05;
+      scene.add(gridHelper);
+
+      // Terrain Base Plane (Crisp Semi-Transparent White)
+      const planeGeo = new THREE.PlaneGeometry(160, 160, 32, 32);
+      const planeMat = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.70,
+        wireframe: false,
+        depthWrite: true
+      });
+      const plane = new THREE.Mesh(planeGeo, planeMat);
+      plane.rotation.x = -Math.PI / 2;
+      plane.position.y = -0.1;
+      scene.add(plane);
+
+      // 5. 3D Solar PV Arrays & Project Beacons
+      const projectGroup = new THREE.Group();
+      scene.add(projectGroup);
+
+      const projectMeshes = [];
+      const cols = 5;
+      const spacingX = 18;
+      const spacingZ = 16;
+
+      // Dark Matte Obsidian Solar Cells & Titanium Mounting Posts (Crisp High Contrast)
+      const solarPanelMat = new THREE.MeshStandardMaterial({
+        color: 0x18181b,
+        metalness: 0.85,
+        roughness: 0.25,
+      });
+
+      const frameMat = new THREE.MeshStandardMaterial({
+        color: 0x52525b,
+        metalness: 0.90,
+        roughness: 0.40
+      });
+
+      telemetry.forEach((p, idx) => {
+        const row = Math.floor(idx / cols);
+        const col = idx % cols;
+        const posX = (col - (cols - 1) / 2) * spacingX;
+        const posZ = (row - 1.5) * spacingZ;
+
+        const siteContainer = new THREE.Group();
+        siteContainer.position.set(posX, 0, posZ);
+
+        // A) Solar PV Table (Tracker Unit)
+        const tracker = new THREE.Group();
+        const postGeo = new THREE.CylinderGeometry(0.2, 0.2, 2.5, 8);
+        const postMesh = new THREE.Mesh(postGeo, frameMat);
+        postMesh.position.y = 1.25;
+        tracker.add(postMesh);
+
+        const tableGeo = new THREE.BoxGeometry(7, 0.15, 4.5);
+        const tableMesh = new THREE.Mesh(tableGeo, solarPanelMat);
+        tableMesh.position.y = 2.5;
+        tableMesh.rotation.x = -Math.PI / 8;
+        tracker.add(tableMesh);
+        siteContainer.add(tracker);
+
+        // B) Holographic Status Beacon (Visible on White Background)
+        const isCritical = p.critical_blockers > 0;
+        const hasActive = p.active_blockers > 0;
+        // Critical = Deep Solid Black (0x000000); Warning = Slate Charcoal (0x3f3f46); Nominal = Silver Steel (0x9ca3af)
+        const beaconColor = isCritical ? 0x000000 : (hasActive ? 0x3f3f46 : 0x9ca3af);
+
+        const beaconGeo = new THREE.SphereGeometry(0.7, 16, 16);
+        const beaconMat = new THREE.MeshBasicMaterial({
+          color: beaconColor,
+          wireframe: false
+        });
+        const beaconMesh = new THREE.Mesh(beaconGeo, beaconMat);
+        beaconMesh.position.set(0, 4.8, 0);
+        beaconMesh.userData = p;
+        siteContainer.add(beaconMesh);
+        projectMeshes.push(beaconMesh);
+
+        // Pulsing Ring under the beacon
+        const ringGeo = new THREE.RingGeometry(1.2, 1.4, 24);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: beaconColor,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: isCritical ? 0.9 : (hasActive ? 0.6 : 0.25)
+        });
+        const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+        ringMesh.rotation.x = -Math.PI / 2;
+        ringMesh.position.y = 0.05;
+        siteContainer.add(ringMesh);
+
+        projectGroup.add(siteContainer);
+      });
+
+      // 6. Floating Energy Particles (Subtle Charcoal Floating in Air)
+      const particleCount = 180;
+      const particleGeo = new THREE.BufferGeometry();
+      const particlePositions = new Float32Array(particleCount * 3);
+
+      for (let i = 0; i < particleCount * 3; i += 3) {
+        particlePositions[i] = (Math.random() - 0.5) * 120;
+        particlePositions[i + 1] = Math.random() * 25 + 0.5;
+        particlePositions[i + 2] = (Math.random() - 0.5) * 120;
+      }
+
+      particleGeo.setAttribute("position", new THREE.BufferAttribute(particlePositions, 3));
+      const particleMat = new THREE.PointsMaterial({
+        color: 0x4b5563,
+        size: 0.45,
+        transparent: true,
+        opacity: 0.45,
+      });
+      const particleSystem = new THREE.Points(particleGeo, particleMat);
+      scene.add(particleSystem);
+
+      // 7. Interactive Raycasting & Tooltips
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+      const tooltip = document.getElementById("node-tooltip");
+      const tooltipTitle = document.getElementById("tooltip-title");
+      const tooltipBody = document.getElementById("tooltip-body");
+      const tooltipStatus = document.getElementById("tooltip-status");
+
+      window.addEventListener("mousemove", (event) => {
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(projectMeshes);
+
+        if (intersects.length > 0) {
+          const hit = intersects[0].object;
+          const data = hit.userData;
+          tooltipTitle.textContent = data.id + " · " + (data.name || "Centrale Solaire");
+          tooltipBody.textContent = "Capacité : " + (data.capacity_mw || 1.0) + " MWc | Blocages actifs : " + data.active_blockers;
+          tooltipStatus.textContent = data.critical_blockers > 0
+            ? "⚠️ ALERTE : " + data.critical_blockers + " critique(s)"
+            : (data.active_blockers > 0 ? "⚡ En Traitement (" + data.active_blockers + ")" : "✅ Statut Nominal");
+          tooltipStatus.style.color = data.critical_blockers > 0
+            ? "#111827"
+            : (data.active_blockers > 0 ? "#374151" : "#6b7280");
+
+          tooltip.style.left = (event.clientX + 14) + "px";
+          tooltip.style.top = (event.clientY + 14) + "px";
+          tooltip.style.display = "block";
+          document.body.style.cursor = "pointer";
+        } else {
+          tooltip.style.display = "none";
+          document.body.style.cursor = "default";
+        }
+      });
+
+      // 8. Animation & Camera Controls
+      let autoRotate = true;
+      let targetCamPos = new THREE.Vector3(0, 32, 55);
+      let targetLookAt = new THREE.Vector3(0, 0, 0);
+      let currentLookAt = new THREE.Vector3(0, 0, 0);
+
+      const clock = new THREE.Clock();
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const elapsed = clock.getElapsedTime();
+
+        if (autoRotate) {
+          projectGroup.rotation.y = Math.sin(elapsed * 0.15) * 0.12;
+        }
+
+        projectMeshes.forEach((mesh, i) => {
+          const scale = 1 + Math.sin(elapsed * 3 + i) * 0.15;
+          mesh.scale.set(scale, scale, scale);
+        });
+
+        const positions = particleGeo.attributes.position.array;
+        for (let i = 1; i < particleCount * 3; i += 3) {
+          positions[i] += 0.04;
+          if (positions[i] > 30) positions[i] = 0.5;
+        }
+        particleGeo.attributes.position.needsUpdate = true;
+
+        camera.position.lerp(targetCamPos, 0.04);
+        currentLookAt.lerp(targetLookAt, 0.04);
+        camera.lookAt(currentLookAt);
+
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // 9. UI Viewport Controls Events
+      document.getElementById("cam-overview").addEventListener("click", function () {
+        targetCamPos.set(0, 38, 60);
+        targetLookAt.set(0, 0, 0);
+        setActivePill(this);
+      });
+
+      document.getElementById("cam-focus-pv01").addEventListener("click", function () {
+        targetCamPos.set(-36, 12, -15);
+        targetLookAt.set(-36, 3, -24);
+        setActivePill(this);
+      });
+
+      document.getElementById("cam-focus-critical").addEventListener("click", function () {
+        targetCamPos.set(10, 18, 12);
+        targetLookAt.set(0, 2, 0);
+        setActivePill(this);
+      });
+
+      const orbitBtn = document.getElementById("toggle-orbit");
+      orbitBtn.addEventListener("click", function () {
+        autoRotate = !autoRotate;
+        orbitBtn.textContent = autoRotate ? "Pause Rotation" : "Reprendre Rotation";
+        orbitBtn.classList.toggle("active", autoRotate);
+      });
+
+      const wireframeBtn = document.getElementById("toggle-wireframe");
+      let isWireframe = false;
+      wireframeBtn.addEventListener("click", function () {
+        isWireframe = !isWireframe;
+        solarPanelMat.wireframe = isWireframe;
+        frameMat.wireframe = isWireframe;
+        planeMat.wireframe = isWireframe;
+        wireframeBtn.classList.toggle("active", isWireframe);
+      });
+
+      function setActivePill(btn) {
+        document.querySelectorAll(".viewport-controls .btn-pill").forEach(p => {
+          if (p.id.startsWith("cam-")) p.classList.remove("active");
+        });
+        btn.classList.add("active");
+      }
+
+      // Responsive Resize Handler
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      // ==========================================================================
+      // 10. AI Energy Video Controller & Switcher
+      // ==========================================================================
+      const bgSolar = document.getElementById("bg-video-solar");
+      const bgWind = document.getElementById("bg-video-wind");
+      const pipFeed = document.getElementById("pip-video-feed");
+      const feedTag = document.getElementById("feed-tag");
+      const btnSolar = document.getElementById("btn-feed-solar");
+      const btnWind = document.getElementById("btn-feed-wind");
+      const btnToggleBg = document.getElementById("btn-toggle-bg-video");
+      const bgAtmosphere = document.getElementById("video-atmosphere");
+
+      let currentFeed = "solar";
+      let bgVideoVisible = true;
+
+      function switchFeed(type) {
+        currentFeed = type;
+        if (type === "solar") {
+          bgSolar.classList.remove("hidden");
+          bgWind.classList.add("hidden");
+          pipFeed.src = "/assets/uranos_project_os/videos/solar_energy.webm";
+          feedTag.textContent = "SOURCE: CENTRALE SOLAIRE 3D";
+          btnSolar.classList.add("active");
+          btnWind.classList.remove("active");
+        } else {
+          bgSolar.classList.add("hidden");
+          bgWind.classList.remove("hidden");
+          pipFeed.src = "/assets/uranos_project_os/videos/wind_turbines.webm";
+          feedTag.textContent = "SOURCE: CHAMP ÉOLIEN IA";
+          btnWind.classList.add("active");
+          btnSolar.classList.remove("active");
+        }
+        pipFeed.play().catch(() => {});
+      }
+
+      btnSolar.addEventListener("click", () => switchFeed("solar"));
+      btnWind.addEventListener("click", () => switchFeed("wind"));
+
+      btnToggleBg.addEventListener("click", () => {
+        bgVideoVisible = !bgVideoVisible;
+        bgAtmosphere.style.display = bgVideoVisible ? "block" : "none";
+        btnToggleBg.classList.toggle("active", bgVideoVisible);
+        btnToggleBg.textContent = bgVideoVisible ? "Ambiance" : "Fond Off";
+      });
+
+    })();
+  </script>
+</body>
+</html>

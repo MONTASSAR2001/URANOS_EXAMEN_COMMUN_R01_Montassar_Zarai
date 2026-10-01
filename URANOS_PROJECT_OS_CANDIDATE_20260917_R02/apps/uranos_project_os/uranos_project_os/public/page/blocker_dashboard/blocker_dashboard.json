@@ -1,0 +1,17 @@
+{
+  "doctype": "Page",
+  "name": "blocker-dashboard",
+  "page_name": "blocker-dashboard",
+  "title": "URANOS — Blocker Dashboard",
+  "module": "URANOS Project OS",
+  "standard": "Yes",
+  "roles": [
+    {"role": "URANOS Executive"},
+    {"role": "URANOS Engineering Director"},
+    {"role": "URANOS Project Manager"},
+    {"role": "URANOS Site Controller"},
+    {"role": "URANOS Civil Director"},
+    {"role": "URANOS Electrical Execution Manager"},
+    {"role": "URANOS Read Only Auditor"}
+  ]
+}

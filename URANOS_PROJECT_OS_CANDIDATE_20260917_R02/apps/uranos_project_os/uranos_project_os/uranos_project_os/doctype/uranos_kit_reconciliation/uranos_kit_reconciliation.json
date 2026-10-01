@@ -1,0 +1,173 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Kit Reconciliation",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 0,
+  "field_order": [
+    "project",
+    "kit_issue",
+    "items",
+    "return_stock_entry",
+    "scrap_stock_entry",
+    "consumption_stock_entry",
+    "verified_progress",
+    "status",
+    "reason",
+    "approved_by",
+    "evidence"
+  ],
+  "fields": [
+    {
+      "fieldname": "project",
+      "label": "Project",
+      "fieldtype": "Link",
+      "options": "Project",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "kit_issue",
+      "label": "Kit Issue",
+      "fieldtype": "Link",
+      "options": "URANOS Kit Issue",
+      "reqd": 1
+    },
+    {
+      "fieldname": "items",
+      "label": "Items",
+      "fieldtype": "Table",
+      "options": "URANOS Reconciliation Item"
+    },
+    {
+      "fieldname": "return_stock_entry",
+      "label": "Return Stock Entry",
+      "fieldtype": "Link",
+      "options": "Stock Entry"
+    },
+    {
+      "fieldname": "scrap_stock_entry",
+      "label": "Scrap Stock Entry",
+      "fieldtype": "Link",
+      "options": "Stock Entry"
+    },
+    {
+      "fieldname": "consumption_stock_entry",
+      "label": "Consumption Stock Entry",
+      "fieldtype": "Link",
+      "options": "Stock Entry",
+      "read_only": 1
+    },
+    {
+      "fieldname": "verified_progress",
+      "label": "Verified Progress",
+      "fieldtype": "Table",
+      "options": "URANOS Impacted Object"
+    },
+    {
+      "fieldname": "status",
+      "label": "Status",
+      "fieldtype": "Select",
+      "options": "Draft\nVariance Review\nApproved\nClosed",
+      "default": "Draft",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "reason",
+      "label": "Reason",
+      "fieldtype": "Small Text"
+    },
+    {
+      "fieldname": "approved_by",
+      "label": "Approved By",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "evidence",
+      "label": "Evidence",
+      "fieldtype": "Table",
+      "options": "URANOS Evidence"
+    }
+  ],
+  "permissions": [
+    {
+      "role": "URANOS Executive",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Engineering Director",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Civil Director",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Electrical Execution Manager",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Project Manager",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Site Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Storekeeper",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Procurement Logistics",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS QA QC",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS HSE",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Finance Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Read Only Auditor",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Team Lead",
+      "read": 1,
+      "select": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

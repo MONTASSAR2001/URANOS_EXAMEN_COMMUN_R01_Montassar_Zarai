@@ -1,0 +1,50 @@
+{
+ "content": null,
+ "creation": "2026-09-30 19:30:14.630993",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2026-09-30 19:37:21.879573",
+ "modified_by": "Administrator",
+ "module": "URANOS Project OS",
+ "name": "blocker-dashboard",
+ "owner": "Administrator",
+ "page_name": "blocker-dashboard",
+ "roles": [
+  {
+   "role": "URANOS Executive"
+  },
+  {
+   "role": "URANOS Engineering Director"
+  },
+  {
+   "role": "URANOS Project Manager"
+  },
+  {
+   "role": "URANOS Site Controller"
+  },
+  {
+   "role": "URANOS Civil Director"
+  },
+  {
+   "role": "URANOS Electrical Execution Manager"
+  },
+  {
+   "role": "URANOS Read Only Auditor"
+  },
+  {
+   "role": "management"
+  },
+  {
+   "role": "engineer"
+  },
+  {
+   "role": "site_team"
+  }
+ ],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0,
+ "title": "URANOS \u2014 Blocker Dashboard"
+}

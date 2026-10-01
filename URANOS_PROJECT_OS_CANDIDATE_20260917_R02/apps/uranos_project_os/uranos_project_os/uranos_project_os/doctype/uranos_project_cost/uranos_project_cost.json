@@ -1,0 +1,132 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Project Cost",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 0,
+  "field_order": [
+    "project",
+    "work_package",
+    "currency",
+    "budget",
+    "committed",
+    "received",
+    "invoiced",
+    "paid",
+    "forecast",
+    "basis",
+    "status"
+  ],
+  "fields": [
+    {
+      "fieldname": "project",
+      "label": "Project",
+      "fieldtype": "Link",
+      "options": "Project",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "work_package",
+      "label": "Work Package",
+      "fieldtype": "Link",
+      "options": "URANOS Work Package",
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "currency",
+      "label": "Currency",
+      "fieldtype": "Link",
+      "options": "Currency",
+      "reqd": 1
+    },
+    {
+      "fieldname": "budget",
+      "label": "Budget",
+      "fieldtype": "Currency",
+      "permlevel": 1
+    },
+    {
+      "fieldname": "committed",
+      "label": "Committed",
+      "fieldtype": "Currency",
+      "read_only": 1,
+      "permlevel": 1
+    },
+    {
+      "fieldname": "received",
+      "label": "Received",
+      "fieldtype": "Currency",
+      "read_only": 1,
+      "permlevel": 1
+    },
+    {
+      "fieldname": "invoiced",
+      "label": "Invoiced",
+      "fieldtype": "Currency",
+      "read_only": 1,
+      "permlevel": 1
+    },
+    {
+      "fieldname": "paid",
+      "label": "Paid",
+      "fieldtype": "Currency",
+      "permlevel": 1
+    },
+    {
+      "fieldname": "forecast",
+      "label": "Forecast",
+      "fieldtype": "Currency",
+      "permlevel": 1
+    },
+    {
+      "fieldname": "basis",
+      "label": "Basis",
+      "fieldtype": "Small Text"
+    },
+    {
+      "fieldname": "status",
+      "label": "Status",
+      "fieldtype": "Select",
+      "options": "Draft\nApproved\nRevised",
+      "default": "Draft",
+      "in_list_view": 1
+    }
+  ],
+  "permissions": [
+    {
+      "role": "URANOS Executive",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Finance Controller",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Executive",
+      "permlevel": 1,
+      "read": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Finance Controller",
+      "permlevel": 1,
+      "read": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

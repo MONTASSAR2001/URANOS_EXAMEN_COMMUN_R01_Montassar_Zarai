@@ -1,0 +1,232 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS NCR",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 0,
+  "field_order": [
+    "project",
+    "work_package",
+    "severity",
+    "source_inspection",
+    "requirement",
+    "defect",
+    "responsible",
+    "corrective_action",
+    "due_date",
+    "closure_verifier",
+    "closed_at",
+    "status",
+    "reported_by",
+    "corrected_by",
+    "closure_verification",
+    "severity_change_reason",
+    "before_evidence",
+    "after_evidence",
+    "evidence"
+  ],
+  "fields": [
+    {
+      "fieldname": "project",
+      "label": "Project",
+      "fieldtype": "Link",
+      "options": "Project",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "work_package",
+      "label": "Work Package",
+      "fieldtype": "Link",
+      "options": "URANOS Work Package",
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "severity",
+      "label": "Severity",
+      "fieldtype": "Select",
+      "options": "Low\nMedium\nHigh\nCritical",
+      "default": "Low"
+    },
+    {
+      "fieldname": "source_inspection",
+      "label": "Source Inspection",
+      "fieldtype": "Link",
+      "options": "Quality Inspection"
+    },
+    {
+      "fieldname": "requirement",
+      "label": "Requirement",
+      "fieldtype": "Small Text",
+      "reqd": 1
+    },
+    {
+      "fieldname": "defect",
+      "label": "Defect",
+      "fieldtype": "Text",
+      "reqd": 1
+    },
+    {
+      "fieldname": "responsible",
+      "label": "Responsible",
+      "fieldtype": "Link",
+      "options": "User"
+    },
+    {
+      "fieldname": "corrective_action",
+      "label": "Corrective Action",
+      "fieldtype": "Text"
+    },
+    {
+      "fieldname": "due_date",
+      "label": "Due Date",
+      "fieldtype": "Date",
+      "reqd": 1
+    },
+    {
+      "fieldname": "closure_verifier",
+      "label": "Closure Verifier",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "closed_at",
+      "label": "Closed At",
+      "fieldtype": "Datetime",
+      "read_only": 1
+    },
+    {
+      "fieldname": "status",
+      "label": "Status",
+      "fieldtype": "Select",
+      "options": "Open\nAssigned\nCorrective Action\nPending Verification\nClosed\nRejected correction\nEscalated",
+      "default": "Open",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "reported_by",
+      "label": "Reported By",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "corrected_by",
+      "label": "Corrected By",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "closure_verification",
+      "label": "Closure Verification",
+      "fieldtype": "Small Text",
+      "read_only": 1
+    },
+    {
+      "fieldname": "severity_change_reason",
+      "label": "Severity Change Reason",
+      "fieldtype": "Small Text"
+    },
+    {
+      "fieldname": "before_evidence",
+      "label": "Before Evidence",
+      "fieldtype": "Table",
+      "options": "URANOS Evidence"
+    },
+    {
+      "fieldname": "after_evidence",
+      "label": "After Evidence",
+      "fieldtype": "Table",
+      "options": "URANOS Evidence"
+    },
+    {
+      "fieldname": "evidence",
+      "label": "Evidence",
+      "fieldtype": "Table",
+      "options": "URANOS Evidence"
+    }
+  ],
+  "permissions": [
+    {
+      "role": "URANOS Executive",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Engineering Director",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Civil Director",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Electrical Execution Manager",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Project Manager",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Site Controller",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Storekeeper",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Procurement Logistics",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS QA QC",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS HSE",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Finance Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Read Only Auditor",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Team Lead",
+      "read": 1,
+      "select": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

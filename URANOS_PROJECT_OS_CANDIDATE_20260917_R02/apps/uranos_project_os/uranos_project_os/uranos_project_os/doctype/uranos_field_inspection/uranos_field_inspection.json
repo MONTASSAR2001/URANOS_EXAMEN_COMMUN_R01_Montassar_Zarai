@@ -1,0 +1,227 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Field Inspection",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 0,
+  "field_order": [
+    "project",
+    "work_package",
+    "activity",
+    "zone",
+    "inspection_type",
+    "hold_point",
+    "procedure_reference",
+    "procedure_document",
+    "posting_date",
+    "activity_template",
+    "checklist",
+    "notes",
+    "quality_inspection",
+    "verifier",
+    "status",
+    "evidence",
+    "sync_uuid",
+    "recorded_by"
+  ],
+  "fields": [
+    {
+      "fieldname": "project",
+      "label": "Project",
+      "fieldtype": "Link",
+      "options": "Project",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "work_package",
+      "label": "Work Package",
+      "fieldtype": "Link",
+      "options": "URANOS Work Package",
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "activity",
+      "label": "Activity",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "zone",
+      "label": "Zone",
+      "fieldtype": "Data",
+      "reqd": 1
+    },
+    {
+      "fieldname": "inspection_type",
+      "label": "Inspection Type",
+      "fieldtype": "Data",
+      "reqd": 1
+    },
+    {
+      "fieldname": "hold_point",
+      "label": "Hold Point",
+      "fieldtype": "Link",
+      "options": "URANOS Hold Point"
+    },
+    {
+      "fieldname": "procedure_reference",
+      "label": "Procedure Reference",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "procedure_document",
+      "label": "Procedure Document",
+      "fieldtype": "Link",
+      "options": "URANOS Document Register"
+    },
+    {
+      "fieldname": "posting_date",
+      "label": "Posting Date",
+      "fieldtype": "Date",
+      "reqd": 1
+    },
+    {
+      "fieldname": "activity_template",
+      "label": "Activity Template",
+      "fieldtype": "Link",
+      "options": "URANOS Activity Template"
+    },
+    {
+      "fieldname": "checklist",
+      "label": "Checklist",
+      "fieldtype": "Table",
+      "options": "URANOS Checklist Item"
+    },
+    {
+      "fieldname": "notes",
+      "label": "Notes",
+      "fieldtype": "Small Text"
+    },
+    {
+      "fieldname": "quality_inspection",
+      "label": "Quality Inspection",
+      "fieldtype": "Link",
+      "options": "Quality Inspection",
+      "read_only": 1
+    },
+    {
+      "fieldname": "verifier",
+      "label": "Verifier",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "status",
+      "label": "Status",
+      "fieldtype": "Select",
+      "options": "Draft\nPending Verification\nAccepted\nRejected",
+      "default": "Draft",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "evidence",
+      "label": "Evidence",
+      "fieldtype": "Table",
+      "options": "URANOS Evidence"
+    },
+    {
+      "fieldname": "sync_uuid",
+      "label": "Sync Uuid",
+      "fieldtype": "Data",
+      "unique": 1,
+      "read_only": 1,
+      "no_copy": 1
+    },
+    {
+      "fieldname": "recorded_by",
+      "label": "Recorded By",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    }
+  ],
+  "permissions": [
+    {
+      "role": "URANOS Executive",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Engineering Director",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Civil Director",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Electrical Execution Manager",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Project Manager",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Site Controller",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Storekeeper",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Procurement Logistics",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS QA QC",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS HSE",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Finance Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Read Only Auditor",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Team Lead",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

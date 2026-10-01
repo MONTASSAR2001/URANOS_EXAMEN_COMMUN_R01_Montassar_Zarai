@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>{{ title or "URANOS Group — Photovoltaic Execution OS" }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="shortcut icon" href="/assets/uranos_project_os/images/login-bg.jpg" type="image/x-icon">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --primary-green: #10b981;
+      --dark-green: #059669;
+      --primary-blue: #0284c7;
+      --royal-blue: #2563eb;
+      --text-dark: #0f172a;
+      --text-muted: #64748b;
+      --text-subtle: #94a3b8;
+    }
+
+    body, html {
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 100vh !important;
+      font-family: var(--font-main);
+      color: var(--text-dark);
+      background-color: #f1f5f9;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    #page-login {
+      width: 100% !important;
+      min-height: 100vh !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    /* FULLSCREEN WRAPPER */
+    .viewport-container {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: url('/assets/uranos_project_os/images/login-bg.jpg');
+      background-size: cover;
+      background-position: center 15%;
+      background-repeat: no-repeat;
+    }
+
+    /* Soft ambient vignette */
+    .viewport-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 40%, rgba(15, 23, 42, 0.05) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* TOP BRAND NAVBAR */
+    .top-navbar {
+      position: relative;
+      z-index: 10;
+      padding: 36px 80px 0 80px;
+      display: flex;
+      align-items: center;
+    }
+
+    .brand-logo-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-decoration: none;
+      user-select: none;
+    }
+
+    .brand-icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.96);
+      padding: 6px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-logo-img {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-text-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-dark);
+      line-height: 1.1;
+    }
+
+    .brand-subtitle {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: -0.01em;
+      margin-top: 2px;
+    }
+
+    /* MAIN TWO-COLUMN CONTENT GRID */
+    .main-grid {
+      position: relative;
+      z-index: 10;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      align-items: flex-start;
+      padding: 30px 80px 50px 80px;
+      max-width: 1480px;
+      width: 100%;
+      margin: 0 auto;
+      gap: 50px;
+    }
+
+    /* LEFT HERO SECTION */
+    .hero-section {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding-top: 15px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      margin-bottom: 20px;
+    }
+
+    .hero-badge-icon {
+      width: 14px;
+      height: 14px;
+      color: var(--dark-green);
+    }
+
+    .hero-badge-text {
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dark-green);
+    }
+
+    .hero-heading {
+      font-size: clamp(42px, 4.4vw, 60px);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      color: var(--text-dark);
+      margin-bottom: 18px;
+    }
+
+    .text-green {
+      color: var(--primary-green);
+    }
+
+    .text-blue {
+      color: #0284c7;
+    }
+
+    .hero-description {
+      font-size: 16.5px;
+      line-height: 1.6;
+      color: #334155;
+      max-width: 490px;
+      margin-bottom: 34px;
+      font-weight: 450;
+    }
+
+    /* Feature Badges Horizontal Row */
+    .features-row {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      flex-wrap: wrap;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .feature-icon-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .feature-icon-circle.green {
+      background: rgba(16, 185, 129, 0.18);
+      color: var(--dark-green);
+    }
+
+    .feature-icon-circle.blue {
+      background: rgba(14, 165, 233, 0.18);
+      color: var(--primary-blue);
+    }
+
+    .feature-icon-circle.teal {
+      background: rgba(20, 184, 166, 0.18);
+      color: #0d9488;
+    }
+
+    .feature-text-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .feature-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.25;
+    }
+
+    .feature-desc {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    /* RIGHT FROSTED GLASS LOGIN CARD */
+    .login-card-container {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+      padding-top: 0;
+    }
+
+    .glass-card {
+      width: 100%;
+      max-width: 450px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(32px) saturate(170%);
+      -webkit-backdrop-filter: blur(32px) saturate(170%);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+      border-radius: 30px;
+      padding: 38px 38px 30px 38px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .card-top-tag {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .card-top-tag svg {
+      width: 15px;
+      height: 15px;
+      color: var(--primary-green);
+    }
+
+    .card-top-tag span {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .card-heading {
+      font-size: 32px;
+      font-weight: 750;
+      letter-spacing: -0.025em;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+
+    .card-subtitle {
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--text-muted);
+      margin-bottom: 26px;
+    }
+
+    /* Feedback Alert */
+    .auth-alert {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 18px;
+      animation: alertSlide 0.25s ease;
+    }
+
+    @keyframes alertSlide {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .auth-alert.error {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #b91c1c;
+    }
+
+    .auth-alert.success {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #047857;
+    }
+
+    /* INPUT FIELDS */
+    .input-field-group {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .input-icon-left {
+      position: absolute;
+      left: 17px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: var(--text-subtle);
+      pointer-events: none;
+      transition: color 0.2s ease;
+    }
+
+    .input-icon-right {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      color: var(--text-subtle);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      padding: 0;
+      transition: color 0.2s ease;
+    }
+
+    .input-icon-right:hover {
+      color: var(--text-dark);
+    }
+
+    .custom-input {
+      width: 100%;
+      height: 52px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1.5px solid rgba(226, 232, 240, 0.85);
+      border-radius: 13px;
+      font-family: inherit;
+      font-size: 14.5px;
+      color: var(--text-dark);
+      padding: 0 46px 0 48px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .custom-input::placeholder {
+      color: #94a3b8;
+      font-weight: 450;
+    }
+
+    .custom-input:focus {
+      background: #ffffff;
+      border-color: var(--primary-green);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+    }
+
+    .input-field-group:focus-within .input-icon-left {
+      color: var(--dark-green);
+    }
+
+    .custom-input.is-invalid {
+      border-color: #ef4444 !important;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+    }
+
+    /* Options Row: Remember Me & Forgot Password */
+    .form-options-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 4px 0 24px 0;
+    }
+
+    .remember-me-label {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: #475569;
+    }
+
+    .custom-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 1.5px solid #cbd5e1;
+      background-color: #ffffff;
+      cursor: pointer;
+      display: grid;
+      place-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .custom-checkbox::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      transform: scale(0);
+      transition: 0.12s transform ease-in-out;
+      box-shadow: inset 1em 1em #ffffff;
+      clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    }
+
+    .custom-checkbox:checked {
+      background-color: var(--primary-green);
+      border-color: var(--primary-green);
+    }
+
+    .custom-checkbox:checked::before {
+      transform: scale(1);
+    }
+
+    .forgot-link {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--dark-green);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .forgot-link:hover {
+      color: #047857;
+      text-decoration: underline;
+    }
+
+    /* Continue Button with Green-to-Blue Gradient */
+    .btn-continue {
+      width: 100%;
+      height: 52px;
+      border-radius: 9999px;
+      border: none;
+      background: linear-gradient(90deg, #10b981 0%, #06b6d4 45%, #0284c7 75%, #2563eb 100%);
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 15.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.45), 0 8px 16px -6px rgba(37, 99, 235, 0.4);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-continue:hover {
+      filter: brightness(1.04);
+      transform: translateY(-1.5px);
+      box-shadow: 0 14px 30px -5px rgba(16, 185, 129, 0.55), 0 10px 20px -5px rgba(37, 99, 235, 0.5);
+    }
+
+    .btn-continue:active {
+      transform: translateY(1px);
+    }
+
+    .btn-continue:disabled {
+      opacity: 0.75;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2.5px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Divider */
+    .or-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 22px 0;
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .or-divider::before,
+    .or-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid rgba(203, 213, 225, 0.8);
+    }
+
+    .or-divider span {
+      padding: 0 14px;
+    }
+
+    /* SSO Secondary Button */
+    .btn-sso {
+      width: 100%;
+      height: 48px;
+      border-radius: 9999px;
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      background: rgba(255, 255, 255, 0.85);
+      color: var(--text-dark);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 650;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-sso:hover {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+    }
+
+    .btn-sso svg {
+      width: 18px;
+      height: 18px;
+      color: #334155;
+    }
+
+    /* Card Footer */
+    .card-footer-text {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .card-footer-text a {
+      color: var(--dark-green);
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .card-footer-text a:hover {
+      color: #047857;
+      text-decoration: underline;
+    }
+
+    /* Demo Quick Logins */
+    .demo-pill-group {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed rgba(203, 213, 225, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .demo-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .demo-chip {
+      background: rgba(241, 245, 249, 0.85);
+      border: 1px solid #e2e8f0;
+      border-radius: 9999px;
+      padding: 3px 10px;
+      font-size: 11.5px;
+      font-weight: 550;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .demo-chip:hover {
+      background: var(--dark-green);
+      border-color: var(--dark-green);
+      color: #ffffff;
+    }
+
+    /* RESPONSIVE BREAKPOINTS */
+    @media (max-width: 1024px) {
+      .top-navbar {
+        padding: 24px 32px 0 32px;
+      }
+      .main-grid {
+        grid-template-columns: 1fr;
+        padding: 20px 32px 40px 32px;
+        gap: 36px;
+      }
+      .hero-section {
+        align-items: center;
+        text-align: center;
+      }
+      .hero-description {
+        max-width: 580px;
+      }
+      .features-row {
+        justify-content: center;
+      }
+      .login-card-container {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .top-navbar {
+        padding: 20px 20px 0 20px;
+      }
+      .main-grid {
+        padding: 16px 16px 30px 16px;
+      }
+      .glass-card {
+        padding: 30px 22px 24px 22px;
+        border-radius: 24px;
+      }
+      .features-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        width: 100%;
+        max-width: 320px;
+      }
+      .hero-heading {
+        font-size: 34px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="viewport-container">
+  <div class="viewport-overlay"></div>
+
+  <!-- TOP BRAND NAVBAR -->
+  <header class="top-navbar">
+    <a href="/" class="brand-logo-group" aria-label="URANOS Group">
+      <div class="brand-icon-wrapper">
+        <img src="/assets/uranos_project_os/images/uranos-logo.jpeg" alt="URANOS Group" class="brand-logo-img">
+      </div>
+      <div class="brand-text-block">
+        <span class="brand-title">URANOS Group</span>
+        <span class="brand-subtitle">Photovoltaic Execution OS</span>
+      </div>
+    </a>
+  </header>
+
+  <!-- MAIN HERO & LOGIN GRID -->
+  <main class="main-grid">
+    <!-- LEFT SIDE: HERO CONTENT -->
+    <section class="hero-section">
+      <!-- Pill Badge -->
+      <div class="hero-badge">
+        <svg class="hero-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+          <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+        </svg>
+        <span class="hero-badge-text">URANOS Group &bull; Solar & Renewable OS</span>
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="hero-heading">
+        Powering a<br>
+        <span class="text-green">Sustainable</span> <span class="text-blue">Future</span>
+      </h1>
+
+      <!-- Subtitle Description -->
+      <p class="hero-description">
+        Monitor, optimize and manage your renewable energy assets with URANOS Group Photovoltaic Execution OS.
+      </p>
+
+      <!-- 3 Feature Badges in Horizontal Row -->
+      <div class="features-row">
+        <!-- Feature 1: Clean Energy -->
+        <div class="feature-item">
+          <div class="feature-icon-circle green">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+              <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+            </svg>
+          </div>
+          <div class="feature-text-block">
+            <span class="feature-title">Clean Energy</span>
+            <span class="feature-desc">Lower Carbon Footprint</span>
+          </div>
+        </div>
+
+        <!-- Feature 2: Higher Efficiency -->
+        <div class="feature-item">
+          <div class="feature-icon-circle blue">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 3v18h18"/>
+              <path d="m19 9-5 5-4-4-3 3"/>
+            </svg>
+          </div>
+          <div class="feature-text-block">
+            <span class="feature-title">Higher Efficiency</span>
+            <span class="feature-desc">Maximize Output</span>
+          </div>
+        </div>
+
+        <!-- Feature 3: Greater Control -->
+        <div class="feature-item">
+          <div class="feature-icon-circle teal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+          </div>
+          <div class="feature-text-block">
+            <span class="feature-title">Greater Control</span>
+            <span class="feature-desc">Smarter Decisions</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT SIDE: FROSTED GLASS LOGIN CARD -->
+    <div class="login-card-container">
+      <div class="glass-card">
+        <!-- Inside Card Top Tag -->
+        <div class="card-top-tag">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+          </svg>
+          <span>URANOS Group &bull; Photovoltaic Execution OS</span>
+        </div>
+
+        <!-- Card Titles -->
+        <h2 class="card-heading">Welcome Back</h2>
+        <p class="card-subtitle">Sign in to your URANOS Group account and continue managing your renewable assets.</p>
+
+        <!-- Dynamic Feedback Alert -->
+        <div id="authAlert" class="auth-alert">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span id="authAlertMsg">Invalid credentials</span>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <form id="loginForm" method="POST" autocomplete="on" novalidate>
+          <!-- Email Field -->
+          <div class="input-field-group">
+            <svg class="input-icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="16" x="2" y="4" rx="2"/>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
+            <input
+              type="text"
+              id="loginEmail"
+              name="usr"
+              class="custom-input"
+              placeholder="Email address"
+              required
+              autocomplete="username"
+              autofocus
+            >
+          </div>
+
+          <!-- Password Field -->
+          <div class="input-field-group">
+            <svg class="input-icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input
+              type="password"
+              id="loginPassword"
+              name="pwd"
+              class="custom-input"
+              placeholder="Password"
+              required
+              autocomplete="current-password"
+            >
+            <button type="button" id="togglePasswordBtn" class="input-icon-right" aria-label="Toggle password visibility">
+              <!-- Eye Off (Default Hidden) -->
+              <svg id="eyeSlashIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                <line x1="2" y1="2" x2="22" y2="22"/>
+              </svg>
+              <!-- Eye Open (Shown) -->
+              <svg id="eyeOpenIcon" style="display:none;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Options Row: Remember Me & Forgot Password -->
+          <div class="form-options-row">
+            <label class="remember-me-label" for="rememberMe">
+              <input type="checkbox" id="rememberMe" class="custom-checkbox" checked>
+              <span>Remember me</span>
+            </label>
+            <a href="#" id="forgotPasswordLink" class="forgot-link">Forgot password?</a>
+          </div>
+
+          <!-- Continue Button with Green-to-Blue Gradient -->
+          <button type="submit" id="btnContinue" class="btn-continue">
+            <span class="btn-text">Continue &rarr;</span>
+            <div class="btn-spinner" id="btnSpinner"></div>
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="or-divider">
+          <span>or</span>
+        </div>
+
+        <!-- SSO Button -->
+        <button type="button" id="btnSso" class="btn-sso">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="16" height="20" x="4" y="2" rx="2" ry="2"/>
+            <path d="M9 22v-4h6v4"/>
+            <path d="M8 6h.01"/>
+            <path d="M16 6h.01"/>
+            <path d="M8 10h.01"/>
+            <path d="M16 10h.01"/>
+            <path d="M8 14h.01"/>
+            <path d="M16 14h.01"/>
+          </svg>
+          <span>Sign in with SSO / Company ID</span>
+        </button>
+
+        <!-- Footer -->
+        <p class="card-footer-text">
+          Don't have an account? <a href="mailto:admin@uranos.local" class="admin-link">Contact your administrator</a>
+        </p>
+
+        <!-- Demo Accounts Quick Fill -->
+        <div class="demo-pill-group">
+          <span class="demo-label">Demo Logins:</span>
+          <span class="demo-chip" onclick="fillDemo('direction_01@uranos.local')">Manager</span>
+          <span class="demo-chip" onclick="fillDemo('ingenieur_01@uranos.local')">ingenieur_01</span>
+          <span class="demo-chip" onclick="fillDemo('chantier_01@uranos.local')">chantier_01</span>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- JAVASCRIPT AUTHENTICATION CONTROLLER -->
+<script>
+  (function () {
+    "use strict";
+
+    const form = document.getElementById("loginForm");
+    const emailInput = document.getElementById("loginEmail");
+    const passwordInput = document.getElementById("loginPassword");
+    const btnContinue = document.getElementById("btnContinue");
+    const btnSpinner = document.getElementById("btnSpinner");
+    const btnText = btnContinue.querySelector(".btn-text");
+    const authAlert = document.getElementById("authAlert");
+    const authAlertMsg = document.getElementById("authAlertMsg");
+    const togglePasswordBtn = document.getElementById("togglePasswordBtn");
+    const eyeSlashIcon = document.getElementById("eyeSlashIcon");
+    const eyeOpenIcon = document.getElementById("eyeOpenIcon");
+    const forgotPasswordLink = document.getElementById("forgotPasswordLink");
+    const btnSso = document.getElementById("btnSso");
+
+    // Toggle Password Visibility
+    togglePasswordBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        eyeSlashIcon.style.display = "none";
+        eyeOpenIcon.style.display = "block";
+      } else {
+        passwordInput.type = "password";
+        eyeSlashIcon.style.display = "block";
+        eyeOpenIcon.style.display = "none";
+      }
+    });
+
+    // Helper: Show Alert
+    function showAlert(message, type = "error") {
+      authAlert.className = `auth-alert ${type}`;
+      authAlertMsg.innerHTML = message;
+      authAlert.style.display = "flex";
+    }
+
+    function hideAlert() {
+      authAlert.style.display = "none";
+    }
+
+    function setLoading(isLoading) {
+      if (isLoading) {
+        btnContinue.disabled = true;
+        btnText.style.display = "none";
+        btnSpinner.style.display = "block";
+      } else {
+        btnContinue.disabled = false;
+        btnText.style.display = "inline";
+        btnSpinner.style.display = "none";
+      }
+    }
+
+    // Clear validation error on type
+    [emailInput, passwordInput].forEach(input => {
+      input.addEventListener("input", function () {
+        this.classList.remove("is-invalid");
+        hideAlert();
+      });
+    });
+
+    // Handle Form Submit
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      hideAlert();
+
+      const usr = (emailInput.value || "").trim();
+      const pwd = passwordInput.value || "";
+
+      if (!usr) {
+        emailInput.classList.add("is-invalid");
+        emailInput.focus();
+        showAlert("Please enter your email address.");
+        return;
+      }
+
+      if (!pwd) {
+        passwordInput.classList.add("is-invalid");
+        passwordInput.focus();
+        showAlert("Please enter your password.");
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const formData = new URLSearchParams();
+        formData.append("usr", usr);
+        formData.append("pwd", pwd);
+        formData.append("device", "desktop");
+
+        const response = await fetch("/api/method/login", {
+          method: "POST",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          body: formData.toString()
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.message === "Logged In") {
+          showAlert("Authentication successful! Redirecting...", "success");
+          
+          const urlParams = new URLSearchParams(window.location.search);
+          const redirectTo = urlParams.get("redirect-to");
+          const targetUrl = redirectTo || (data.home_page === "desk" ? "/app" : (data.home_page || "/app"));
+
+          setTimeout(() => {
+            window.location.href = targetUrl;
+          }, 350);
+        } else {
+          setLoading(false);
+          passwordInput.classList.add("is-invalid");
+          passwordInput.focus();
+          
+          let errText = "Invalid email or password. Please try again.";
+          if (data && data._server_messages) {
+            try {
+              const msgs = JSON.parse(data._server_messages);
+              if (msgs.length > 0) {
+                const parsed = JSON.parse(msgs[0]);
+                errText = parsed.message || errText;
+              }
+            } catch (_) {}
+          }
+          showAlert(errText, "error");
+        }
+      } catch (err) {
+        setLoading(false);
+        showAlert("Network error connecting to authentication server. Please check your connection.");
+      }
+    });
+
+    // SSO handler
+    btnSso.addEventListener("click", function () {
+      showAlert("Single Sign-On (SSO) is provisioned via corporate identity. Please sign in with your enterprise credentials or contact your system admin.", "error");
+    });
+
+    // Forgot password handler
+    forgotPasswordLink.addEventListener("click", function (e) {
+      e.preventDefault();
+      const email = emailInput.value.trim();
+      if (!email) {
+        showAlert("Please enter your email above and click 'Forgot password?' again.", "error");
+        emailInput.focus();
+        return;
+      }
+      showAlert(`A password reset link has been requested for <b>${email}</b>. Please check your mailbox.`, "success");
+    });
+
+    // Quick fill helper for demo accounts
+    window.fillDemo = function (email) {
+      emailInput.value = email;
+      passwordInput.value = "Password123!";
+      emailInput.classList.remove("is-invalid");
+      passwordInput.classList.remove("is-invalid");
+      hideAlert();
+      btnContinue.focus();
+    };
+
+  })();
+</script>
+
+</body>
+</html>

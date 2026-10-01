@@ -1,0 +1,215 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Shipment Milestone",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 0,
+  "field_order": [
+    "project",
+    "shipment",
+    "container",
+    "milestone_type",
+    "planned_at",
+    "actual_at",
+    "source_type",
+    "source_timestamp",
+    "provider_event_id",
+    "payload_hash",
+    "location",
+    "provider",
+    "source_reference",
+    "eta",
+    "purchase_receipt",
+    "recorded_by",
+    "event_payload",
+    "evidence"
+  ],
+  "fields": [
+    {
+      "fieldname": "project",
+      "label": "Project",
+      "fieldtype": "Link",
+      "options": "Project",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "shipment",
+      "label": "Shipment",
+      "fieldtype": "Link",
+      "options": "URANOS Shipment",
+      "reqd": 1
+    },
+    {
+      "fieldname": "container",
+      "label": "Container",
+      "fieldtype": "Link",
+      "options": "URANOS Container"
+    },
+    {
+      "fieldname": "milestone_type",
+      "label": "Milestone Type",
+      "fieldtype": "Data",
+      "reqd": 1
+    },
+    {
+      "fieldname": "planned_at",
+      "label": "Planned At",
+      "fieldtype": "Datetime"
+    },
+    {
+      "fieldname": "actual_at",
+      "label": "Actual At",
+      "fieldtype": "Datetime"
+    },
+    {
+      "fieldname": "source_type",
+      "label": "Source Type",
+      "fieldtype": "Select",
+      "options": "Manual Verified\nAPI\nForwarder Email\nCarrier Portal",
+      "default": "Manual Verified"
+    },
+    {
+      "fieldname": "source_timestamp",
+      "label": "Source Timestamp",
+      "fieldtype": "Datetime",
+      "reqd": 1
+    },
+    {
+      "fieldname": "provider_event_id",
+      "label": "Provider Event Id",
+      "fieldtype": "Data",
+      "unique": 1
+    },
+    {
+      "fieldname": "payload_hash",
+      "label": "Payload Hash",
+      "fieldtype": "Data",
+      "read_only": 1
+    },
+    {
+      "fieldname": "location",
+      "label": "Location",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "provider",
+      "label": "Provider",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "source_reference",
+      "label": "Source Reference",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "eta",
+      "label": "Eta",
+      "fieldtype": "Datetime"
+    },
+    {
+      "fieldname": "purchase_receipt",
+      "label": "Purchase Receipt",
+      "fieldtype": "Link",
+      "options": "Purchase Receipt"
+    },
+    {
+      "fieldname": "recorded_by",
+      "label": "Recorded By",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "event_payload",
+      "label": "Event Payload",
+      "fieldtype": "Long Text",
+      "read_only": 1
+    },
+    {
+      "fieldname": "evidence",
+      "label": "Evidence",
+      "fieldtype": "Table",
+      "options": "URANOS Evidence"
+    }
+  ],
+  "permissions": [
+    {
+      "role": "URANOS Executive",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Engineering Director",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Civil Director",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Electrical Execution Manager",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Project Manager",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Site Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Storekeeper",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Procurement Logistics",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS QA QC",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS HSE",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Finance Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Read Only Auditor",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Team Lead",
+      "read": 1,
+      "select": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

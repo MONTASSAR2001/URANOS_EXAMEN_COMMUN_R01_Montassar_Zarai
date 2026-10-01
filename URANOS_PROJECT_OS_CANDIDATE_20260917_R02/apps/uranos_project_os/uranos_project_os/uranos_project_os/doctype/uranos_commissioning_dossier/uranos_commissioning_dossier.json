@@ -1,0 +1,187 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Commissioning Dossier",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 0,
+  "field_order": [
+    "project",
+    "work_package",
+    "system_name",
+    "required_tests",
+    "required_documents",
+    "punch_list",
+    "accepted_by",
+    "accepted_at",
+    "prepared_by",
+    "acceptance_evidence",
+    "status",
+    "evidence"
+  ],
+  "fields": [
+    {
+      "fieldname": "project",
+      "label": "Project",
+      "fieldtype": "Link",
+      "options": "Project",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "work_package",
+      "label": "Work Package",
+      "fieldtype": "Link",
+      "options": "URANOS Work Package",
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "system_name",
+      "label": "System Name",
+      "fieldtype": "Data",
+      "reqd": 1
+    },
+    {
+      "fieldname": "required_tests",
+      "label": "Required Tests",
+      "fieldtype": "Table",
+      "options": "URANOS Checklist Item"
+    },
+    {
+      "fieldname": "required_documents",
+      "label": "Required Documents",
+      "fieldtype": "Table",
+      "options": "URANOS Document Requirement"
+    },
+    {
+      "fieldname": "punch_list",
+      "label": "Punch List",
+      "fieldtype": "Table",
+      "options": "URANOS Checklist Item"
+    },
+    {
+      "fieldname": "accepted_by",
+      "label": "Accepted By",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "accepted_at",
+      "label": "Accepted At",
+      "fieldtype": "Datetime",
+      "read_only": 1
+    },
+    {
+      "fieldname": "prepared_by",
+      "label": "Prepared By",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "acceptance_evidence",
+      "label": "Acceptance Evidence",
+      "fieldtype": "Table",
+      "options": "URANOS Evidence"
+    },
+    {
+      "fieldname": "status",
+      "label": "Status",
+      "fieldtype": "Select",
+      "options": "Draft\nTesting\nPending Acceptance\nAccepted\nClosed",
+      "default": "Draft",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "evidence",
+      "label": "Evidence",
+      "fieldtype": "Table",
+      "options": "URANOS Evidence"
+    }
+  ],
+  "permissions": [
+    {
+      "role": "URANOS Executive",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Engineering Director",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Civil Director",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Electrical Execution Manager",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Project Manager",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Site Controller",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Storekeeper",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Procurement Logistics",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS QA QC",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS HSE",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Finance Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Read Only Auditor",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Team Lead",
+      "read": 1,
+      "select": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

@@ -1,0 +1,247 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Cable Reel Movement",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 0,
+  "field_order": [
+    "project",
+    "reel",
+    "work_package",
+    "issue_movement",
+    "movement_type",
+    "posting_date",
+    "from_warehouse",
+    "to_warehouse",
+    "issued_length",
+    "installed_length",
+    "scrap_length",
+    "returned_length",
+    "destination_circuit",
+    "zone",
+    "stock_entry",
+    "performed_by",
+    "approval",
+    "status",
+    "evidence",
+    "sync_uuid",
+    "recorded_by"
+  ],
+  "fields": [
+    {
+      "fieldname": "project",
+      "label": "Project",
+      "fieldtype": "Link",
+      "options": "Project",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "reel",
+      "label": "Reel",
+      "fieldtype": "Link",
+      "options": "URANOS Cable Reel",
+      "reqd": 1
+    },
+    {
+      "fieldname": "work_package",
+      "label": "Work Package",
+      "fieldtype": "Link",
+      "options": "URANOS Work Package",
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "issue_movement",
+      "label": "Issue Movement",
+      "fieldtype": "Link",
+      "options": "URANOS Cable Reel Movement"
+    },
+    {
+      "fieldname": "movement_type",
+      "label": "Movement Type",
+      "fieldtype": "Select",
+      "options": "Issue\nReturn\nScrap\nReconcile",
+      "default": "Issue"
+    },
+    {
+      "fieldname": "posting_date",
+      "label": "Posting Date",
+      "fieldtype": "Date",
+      "reqd": 1
+    },
+    {
+      "fieldname": "from_warehouse",
+      "label": "From Warehouse",
+      "fieldtype": "Link",
+      "options": "Warehouse"
+    },
+    {
+      "fieldname": "to_warehouse",
+      "label": "To Warehouse",
+      "fieldtype": "Link",
+      "options": "Warehouse"
+    },
+    {
+      "fieldname": "issued_length",
+      "label": "Issued Length",
+      "fieldtype": "Float",
+      "precision": "6"
+    },
+    {
+      "fieldname": "installed_length",
+      "label": "Installed Length",
+      "fieldtype": "Float",
+      "precision": "6"
+    },
+    {
+      "fieldname": "scrap_length",
+      "label": "Scrap Length",
+      "fieldtype": "Float",
+      "precision": "6"
+    },
+    {
+      "fieldname": "returned_length",
+      "label": "Returned Length",
+      "fieldtype": "Float",
+      "precision": "6"
+    },
+    {
+      "fieldname": "destination_circuit",
+      "label": "Destination Circuit",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "zone",
+      "label": "Zone",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "stock_entry",
+      "label": "Stock Entry",
+      "fieldtype": "Link",
+      "options": "Stock Entry",
+      "read_only": 1
+    },
+    {
+      "fieldname": "performed_by",
+      "label": "Performed By",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "approval",
+      "label": "Approval",
+      "fieldtype": "Link",
+      "options": "URANOS Approval"
+    },
+    {
+      "fieldname": "status",
+      "label": "Status",
+      "fieldtype": "Select",
+      "options": "Draft\nPosted\nCancelled",
+      "default": "Draft",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "evidence",
+      "label": "Evidence",
+      "fieldtype": "Table",
+      "options": "URANOS Evidence"
+    },
+    {
+      "fieldname": "sync_uuid",
+      "label": "Sync Uuid",
+      "fieldtype": "Data",
+      "unique": 1,
+      "read_only": 1,
+      "no_copy": 1
+    },
+    {
+      "fieldname": "recorded_by",
+      "label": "Recorded By",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    }
+  ],
+  "permissions": [
+    {
+      "role": "URANOS Executive",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Engineering Director",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Civil Director",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Electrical Execution Manager",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Project Manager",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Site Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Storekeeper",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Procurement Logistics",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS QA QC",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS HSE",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Finance Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Read Only Auditor",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Team Lead",
+      "read": 1,
+      "select": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

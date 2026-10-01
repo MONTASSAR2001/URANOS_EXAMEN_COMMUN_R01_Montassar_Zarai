@@ -1,0 +1,76 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Kit Item",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 1,
+  "field_order": [
+    "item_code",
+    "qty_per_unit",
+    "uom",
+    "risk_class",
+    "tolerance_percent",
+    "returnable",
+    "batch_required",
+    "serial_required"
+  ],
+  "fields": [
+    {
+      "fieldname": "item_code",
+      "label": "Item Code",
+      "fieldtype": "Link",
+      "options": "Item",
+      "reqd": 1
+    },
+    {
+      "fieldname": "qty_per_unit",
+      "label": "Qty Per Unit",
+      "fieldtype": "Float",
+      "reqd": 1,
+      "precision": "6"
+    },
+    {
+      "fieldname": "uom",
+      "label": "Uom",
+      "fieldtype": "Link",
+      "options": "UOM",
+      "reqd": 1
+    },
+    {
+      "fieldname": "risk_class",
+      "label": "Risk Class",
+      "fieldtype": "Select",
+      "options": "R1\nR2\nR3\nR4",
+      "default": "R1"
+    },
+    {
+      "fieldname": "tolerance_percent",
+      "label": "Tolerance Percent",
+      "fieldtype": "Float",
+      "precision": "6"
+    },
+    {
+      "fieldname": "returnable",
+      "label": "Returnable",
+      "fieldtype": "Check"
+    },
+    {
+      "fieldname": "batch_required",
+      "label": "Batch Required",
+      "fieldtype": "Check"
+    },
+    {
+      "fieldname": "serial_required",
+      "label": "Serial Required",
+      "fieldtype": "Check"
+    }
+  ],
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

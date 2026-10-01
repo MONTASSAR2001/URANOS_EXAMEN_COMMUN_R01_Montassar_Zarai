@@ -1,0 +1,30 @@
+{
+  "data_classification": "synthetic",
+  "reference_date": "2026-10-01",
+  "projects": [
+    {"id":"PV-01","capacity_mw":1}, {"id":"PV-02","capacity_mw":1},
+    {"id":"PV-03","capacity_mw":1}, {"id":"PV-04","capacity_mw":1},
+    {"id":"PV-05","capacity_mw":1}, {"id":"PV-06","capacity_mw":1},
+    {"id":"PV-07","capacity_mw":1}, {"id":"PV-08","capacity_mw":1},
+    {"id":"PV-09","capacity_mw":1}, {"id":"PV-10","capacity_mw":1},
+    {"id":"PV-11","capacity_mw":1}, {"id":"PV-12","capacity_mw":1},
+    {"id":"PV-13","capacity_mw":1}, {"id":"PV-14","capacity_mw":1},
+    {"id":"PV-15","capacity_mw":1}, {"id":"PV-16","capacity_mw":1},
+    {"id":"PV-17","capacity_mw":1}, {"id":"PV-18","capacity_mw":1},
+    {"id":"PV-19","capacity_mw":1}, {"id":"PV-20","capacity_mw":1}
+  ],
+  "demo_users": [
+    {"id":"chantier_01","role":"site_team","projects":["PV-01"]},
+    {"id":"chantier_02","role":"site_team","projects":["PV-02"]},
+    {"id":"ingenieur_01","role":"engineer","projects":["PV-01","PV-02"]},
+    {"id":"direction_01","role":"management","projects":"all"}
+  ],
+  "sample_issues": [
+    {"id":"B-001","project":"PV-01","title":"Attente d'un document d'étude","category":"studies","severity":"critical","responsible":"ingenieur_01","due_date":"2026-09-29","status":"Open"},
+    {"id":"B-002","project":"PV-01","title":"Livraison de matériel à confirmer","category":"supply","severity":"medium","responsible":null,"due_date":null,"status":"Open"},
+    {"id":"B-003","project":"PV-02","title":"Zone à inspecter","category":"civil","severity":"high","responsible":"ingenieur_01","due_date":"2026-10-01","status":"In Progress"},
+    {"id":"B-004","project":"PV-02","title":"Correction de repérage à vérifier","category":"electrical","severity":"low","responsible":"chantier_02","due_date":"2026-09-30","status":"Pending Verification"},
+    {"id":"B-005","project":"PV-03","title":"Action fictive déjà clôturée","category":"assembly","severity":"critical","responsible":"ingenieur_03","due_date":"2026-09-25","status":"Closed"}
+  ],
+  "note": "Les enregistrements sont fictifs et incomplets volontairement. Une valeur absente ne prouve ni zéro, ni retard. Les candidats peuvent compléter par d'autres cas entièrement fictifs et documentés."
+}

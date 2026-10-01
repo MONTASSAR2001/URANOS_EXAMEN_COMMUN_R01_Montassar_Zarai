@@ -1,0 +1,212 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Shipment",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 0,
+  "field_order": [
+    "project",
+    "supplier",
+    "purchase_orders",
+    "incoterm",
+    "forwarder",
+    "origin",
+    "destination",
+    "etd",
+    "eta_initial",
+    "eta_revised",
+    "need_by",
+    "delay_alert_days",
+    "criticality",
+    "status",
+    "purchase_receipt",
+    "packing_allocations",
+    "required_documents",
+    "evidence"
+  ],
+  "fields": [
+    {
+      "fieldname": "project",
+      "label": "Project",
+      "fieldtype": "Link",
+      "options": "Project",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "supplier",
+      "label": "Supplier",
+      "fieldtype": "Link",
+      "options": "Supplier",
+      "reqd": 1
+    },
+    {
+      "fieldname": "purchase_orders",
+      "label": "Purchase Orders",
+      "fieldtype": "Table",
+      "options": "URANOS Purchase Order Link"
+    },
+    {
+      "fieldname": "incoterm",
+      "label": "Incoterm",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "forwarder",
+      "label": "Forwarder",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "origin",
+      "label": "Origin",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "destination",
+      "label": "Destination",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "etd",
+      "label": "Etd",
+      "fieldtype": "Datetime"
+    },
+    {
+      "fieldname": "eta_initial",
+      "label": "Eta Initial",
+      "fieldtype": "Datetime"
+    },
+    {
+      "fieldname": "eta_revised",
+      "label": "Eta Revised",
+      "fieldtype": "Datetime"
+    },
+    {
+      "fieldname": "need_by",
+      "label": "Need By",
+      "fieldtype": "Date"
+    },
+    {
+      "fieldname": "delay_alert_days",
+      "label": "Delay Alert Days",
+      "fieldtype": "Int"
+    },
+    {
+      "fieldname": "criticality",
+      "label": "Criticality",
+      "fieldtype": "Select",
+      "options": "Normal\nHigh\nCritical",
+      "default": "Normal"
+    },
+    {
+      "fieldname": "status",
+      "label": "Status",
+      "fieldtype": "Select",
+      "options": "Planned\nPO Confirmed\nProduction\nReady for Pickup\nAt Origin Port\nDeparted\nIn Transit\nDestination Port\nCustoms\nReleased\nTrucking\nSite Received\nClosed",
+      "default": "Planned",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "purchase_receipt",
+      "label": "Purchase Receipt",
+      "fieldtype": "Link",
+      "options": "Purchase Receipt"
+    },
+    {
+      "fieldname": "packing_allocations",
+      "label": "Packing Allocations",
+      "fieldtype": "Long Text"
+    },
+    {
+      "fieldname": "required_documents",
+      "label": "Required Documents",
+      "fieldtype": "Table",
+      "options": "URANOS Document Requirement"
+    },
+    {
+      "fieldname": "evidence",
+      "label": "Evidence",
+      "fieldtype": "Table",
+      "options": "URANOS Evidence"
+    }
+  ],
+  "permissions": [
+    {
+      "role": "URANOS Executive",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Engineering Director",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Civil Director",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Electrical Execution Manager",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Project Manager",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Site Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Storekeeper",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Procurement Logistics",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS QA QC",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS HSE",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Finance Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Read Only Auditor",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Team Lead",
+      "read": 1,
+      "select": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

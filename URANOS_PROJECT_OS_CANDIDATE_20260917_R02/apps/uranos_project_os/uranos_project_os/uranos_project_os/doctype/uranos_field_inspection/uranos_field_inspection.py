@@ -1,0 +1,6 @@
+"""URANOS Field Inspection controller; business enforcement is shared."""
+from uranos_project_os.controllers import UranosDocument
+
+
+class URANOSFieldInspection(UranosDocument):
+    pass

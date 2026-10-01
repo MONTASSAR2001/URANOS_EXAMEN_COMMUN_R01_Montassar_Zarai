@@ -1,0 +1,177 @@
+<!-- URANOS Blocker Dashboard — Semantic Shell
+     All dynamic content is injected by blocker_dashboard.js.
+     The HTML defines the permanent structural skeleton only. -->
+<div id="uranos-bd" class="uranos-bd" role="main" aria-label="URANOS Blocker Dashboard">
+
+  <!-- ── HEADER ──────────────────────────────────────────────── -->
+  <header class="bd-header" role="banner">
+    <div class="bd-header__brand">
+      <span class="bd-header__icon" aria-hidden="true">&#9650;</span>
+      <div>
+        <h1 class="bd-header__title" id="bd-page-title">Blocker Dashboard</h1>
+        <p class="bd-header__subtitle" id="bd-page-subtitle">Surveillance opérationnelle des blocages URANOS</p>
+      </div>
+    </div>
+
+    <div class="bd-header__controls" role="toolbar" aria-label="Dashboard controls">
+      <!-- Project filter -->
+      <div class="bd-control-group">
+        <label class="bd-control-group__label" for="bd-project-select" id="bd-project-label">
+          Projet
+        </label>
+        <div class="bd-select-wrapper">
+          <select id="bd-project-select" class="bd-select" aria-labelledby="bd-project-label">
+            <option value="">— Tous les projets —</option>
+          </select>
+          <span class="bd-select-arrow" aria-hidden="true">&#9660;</span>
+        </div>
+      </div>
+
+      <!-- Severity filter -->
+      <div class="bd-control-group">
+        <label class="bd-control-group__label" for="bd-severity-select" id="bd-severity-label">
+          Sévérité
+        </label>
+        <div class="bd-select-wrapper">
+          <select id="bd-severity-select" class="bd-select" aria-labelledby="bd-severity-label">
+            <option value="">Toutes</option>
+            <option value="Critical">Critical</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+          <span class="bd-select-arrow" aria-hidden="true">&#9660;</span>
+        </div>
+      </div>
+
+      <!-- Create Blocker button -->
+      <button id="bd-create-btn" class="bd-btn bd-btn--success" type="button" aria-label="Créer un nouvel obstacle">
+        <span class="bd-btn__icon" aria-hidden="true">+</span>
+        <span class="bd-btn__text" id="bd-create-label">+ Nouvel Obstacle</span>
+      </button>
+
+      <!-- Refresh button -->
+      <button id="bd-refresh-btn" class="bd-btn bd-btn--primary" type="button" aria-label="Actualiser le tableau de bord">
+        <span class="bd-btn__icon" aria-hidden="true">&#8635;</span>
+        <span class="bd-btn__text" id="bd-refresh-label">Actualiser</span>
+      </button>
+
+      <!-- AI Smart Synthesis Button -->
+      <button id="bd-ai-synthesis-btn" class="bd-btn bd-btn--ai" type="button" aria-label="Générer la Synthèse Intelligente">
+        <span class="bd-btn__icon" aria-hidden="true">✨</span>
+        <span class="bd-btn__text" id="bd-ai-synthesis-label">Synthèse Intelligente</span>
+      </button>
+
+      <!-- Last updated timestamp -->
+      <span class="bd-timestamp" id="bd-last-updated" aria-live="polite" aria-atomic="true"></span>
+    </div>
+  </header>
+
+  <!-- ── LOADING OVERLAY ─────────────────────────────────────── -->
+  <div id="bd-loading" class="bd-loading" role="status" aria-label="Chargement en cours" hidden>
+    <div class="bd-loading__spinner" aria-hidden="true"></div>
+    <span class="bd-loading__text" id="bd-loading-text">Chargement…</span>
+  </div>
+
+  <!-- ── KPI SCORECARDS ──────────────────────────────────────── -->
+  <section class="bd-kpi-grid" aria-labelledby="bd-kpi-heading">
+    <h2 class="sr-only" id="bd-kpi-heading">Indicateurs clés de performance</h2>
+
+    <article class="bd-kpi-card bd-kpi-card--active" id="kpi-active"
+             aria-label="Total des blocages actifs">
+      <div class="bd-kpi-card__glow" aria-hidden="true"></div>
+      <span class="bd-kpi-card__icon" aria-hidden="true">&#9888;</span>
+      <div class="bd-kpi-card__body">
+        <span class="bd-kpi-card__value" id="kpi-active-val" aria-live="polite">—</span>
+        <span class="bd-kpi-card__label" id="kpi-active-label">Blocages actifs</span>
+      </div>
+      <div class="bd-kpi-card__trend" id="kpi-active-trend" aria-live="polite"></div>
+    </article>
+
+    <article class="bd-kpi-card bd-kpi-card--critical" id="kpi-critical"
+             aria-label="Blocages Critical ou High">
+      <div class="bd-kpi-card__glow" aria-hidden="true"></div>
+      <span class="bd-kpi-card__icon" aria-hidden="true">&#128308;</span>
+      <div class="bd-kpi-card__body">
+        <span class="bd-kpi-card__value" id="kpi-critical-val" aria-live="polite">—</span>
+        <span class="bd-kpi-card__label" id="kpi-critical-label">Critical / High</span>
+      </div>
+      <div class="bd-kpi-card__trend" id="kpi-critical-trend" aria-live="polite"></div>
+    </article>
+
+    <article class="bd-kpi-card bd-kpi-card--pending" id="kpi-pending"
+             aria-label="En attente de vérification indépendante">
+      <div class="bd-kpi-card__glow" aria-hidden="true"></div>
+      <span class="bd-kpi-card__icon" aria-hidden="true">&#128336;</span>
+      <div class="bd-kpi-card__body">
+        <span class="bd-kpi-card__value" id="kpi-pending-val" aria-live="polite">—</span>
+        <span class="bd-kpi-card__label" id="kpi-pending-label">En attente vérif.</span>
+      </div>
+      <div class="bd-kpi-card__trend" id="kpi-pending-trend" aria-live="polite"></div>
+    </article>
+
+    <article class="bd-kpi-card bd-kpi-card--overdue" id="kpi-overdue"
+             aria-label="Blocages hors délai cible">
+      <div class="bd-kpi-card__glow" aria-hidden="true"></div>
+      <span class="bd-kpi-card__icon" aria-hidden="true">&#9201;</span>
+      <div class="bd-kpi-card__body">
+        <span class="bd-kpi-card__value" id="kpi-overdue-val" aria-live="polite">—</span>
+        <span class="bd-kpi-card__label" id="kpi-overdue-label">Hors délai cible</span>
+      </div>
+      <div class="bd-kpi-card__trend" id="kpi-overdue-trend" aria-live="polite"></div>
+    </article>
+  </section>
+
+  <!-- ── CHARTS ROW ──────────────────────────────────────────── -->
+  <section class="bd-charts-row" aria-labelledby="bd-charts-heading">
+    <h2 class="sr-only" id="bd-charts-heading">Graphiques analytiques</h2>
+
+    <div class="bd-chart-card" id="bd-chart-status-card">
+      <h3 class="bd-chart-card__title" id="bd-chart-status-title">Répartition par statut</h3>
+      <div class="bd-chart-card__body" id="bd-chart-status" role="img"
+           aria-label="Graphique en anneau — répartition par statut"></div>
+    </div>
+
+    <div class="bd-chart-card" id="bd-chart-category-card">
+      <h3 class="bd-chart-card__title" id="bd-chart-category-title">Blocages par catégorie</h3>
+      <div class="bd-chart-card__body" id="bd-chart-category" role="img"
+           aria-label="Graphique en barres — blocages par catégorie"></div>
+    </div>
+  </section>
+
+  <!-- ── ACTION TABLE ────────────────────────────────────────── -->
+  <section class="bd-table-section" aria-labelledby="bd-table-heading">
+    <div class="bd-table-section__header">
+      <h2 class="bd-table-section__title" id="bd-table-heading">Blocages actionnables</h2>
+      <span class="bd-badge" id="bd-table-count" aria-live="polite"></span>
+    </div>
+
+    <div class="bd-table-wrapper" role="region" aria-label="Liste des blocages actionnables" tabindex="0">
+      <table class="bd-table" id="bd-blockers-table" aria-labelledby="bd-table-heading">
+        <thead>
+          <tr>
+            <th scope="col" id="th-title"     class="bd-table__th">Titre</th>
+            <th scope="col" id="th-project"   class="bd-table__th">Projet</th>
+            <th scope="col" id="th-status"    class="bd-table__th">Statut</th>
+            <th scope="col" id="th-severity"  class="bd-table__th">Sévérité</th>
+            <th scope="col" id="th-category"  class="bd-table__th">Catégorie</th>
+            <th scope="col" id="th-resp"      class="bd-table__th">Responsable</th>
+            <th scope="col" id="th-target"    class="bd-table__th">Délai cible</th>
+            <th scope="col" id="th-lost"      class="bd-table__th">H. perdues</th>
+            <th scope="col" id="th-action"    class="bd-table__th">Action</th>
+          </tr>
+        </thead>
+        <tbody id="bd-table-body">
+          <!-- Rows injected by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty state -->
+    <div id="bd-empty-state" class="bd-empty" hidden aria-live="polite">
+      <span class="bd-empty__icon" aria-hidden="true">&#9989;</span>
+      <p class="bd-empty__text" id="bd-empty-text">Aucun blocage actif pour ce filtre.</p>
+    </div>
+  </section>
+
+</div><!-- /#uranos-bd -->

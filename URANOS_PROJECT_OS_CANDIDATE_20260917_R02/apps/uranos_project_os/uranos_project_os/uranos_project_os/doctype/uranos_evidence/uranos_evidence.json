@@ -1,0 +1,47 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Evidence",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 1,
+  "field_order": [
+    "file",
+    "caption",
+    "captured_at",
+    "captured_by"
+  ],
+  "fields": [
+    {
+      "fieldname": "file",
+      "label": "File",
+      "fieldtype": "Link",
+      "options": "File",
+      "reqd": 1
+    },
+    {
+      "fieldname": "caption",
+      "label": "Caption",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "captured_at",
+      "label": "Captured At",
+      "fieldtype": "Datetime"
+    },
+    {
+      "fieldname": "captured_by",
+      "label": "Captured By",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    }
+  ],
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

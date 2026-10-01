@@ -1,0 +1,318 @@
+# ============================================================================
+# URANOS Project OS — Frappe v16 Local Development Stack
+# ============================================================================
+# Usage:
+#   cp .env.example .env          → Create your local secrets file (first time)
+#   docker compose up -d          → Start all services
+#   docker compose exec backend bash  → Enter the Frappe container
+#   docker compose logs -f backend    → Tail backend logs
+#   docker compose down -v            → Stop and destroy all volumes
+#
+# First-time setup:  ./setup_dev.sh
+# ============================================================================
+
+# ---------------------------------------------------------------------------
+# Named volumes — all data survives container restarts
+# ---------------------------------------------------------------------------
+volumes:
+  mariadb_data:
+    driver: local
+  redis_cache_data:
+    driver: local
+  redis_queue_data:
+    driver: local
+  bench_sites:
+    driver: local
+  bench_logs:
+    driver: local
+
+# ---------------------------------------------------------------------------
+# Explicit named network — services are network-isolated from the host
+# Default bridge gives them all mutual DNS but no host exposure beyond
+# explicitly published ports.
+# ---------------------------------------------------------------------------
+networks:
+  uranos_net:
+    name: uranos_net
+    driver: bridge
+
+# ---------------------------------------------------------------------------
+# Shared environment block reused by every Frappe process via YAML anchor
+# ---------------------------------------------------------------------------
+x-frappe-env: &frappe-env
+  FRAPPE_SITE_NAME_HEADER: "$$host"
+  DB_HOST: mariadb
+  DB_PORT: "3306"
+  REDIS_CACHE: "redis://redis-cache:6379"
+  REDIS_QUEUE: "redis://redis-queue:6379"
+  SOCKETIO_PORT: "9000"
+  PYTHONPATH: "/home/frappe/frappe-bench/apps/uranos_project_os"
+
+# ---------------------------------------------------------------------------
+# Shared volume set for every Frappe process via YAML anchor
+# ---------------------------------------------------------------------------
+x-frappe-volumes: &frappe-volumes
+  - bench_sites:/home/frappe/frappe-bench/sites
+  - bench_logs:/home/frappe/frappe-bench/logs
+  - ./apps/uranos_project_os:/home/frappe/frappe-bench/apps/uranos_project_os:z
+
+# ---------------------------------------------------------------------------
+# Shared network membership for every Frappe process via YAML anchor
+# ---------------------------------------------------------------------------
+x-frappe-networks: &frappe-networks
+  networks:
+    - uranos_net
+
+services:
+
+  # ==========================================================================
+  # MariaDB 10.6 — only version officially supported by Frappe v16
+  # Credentials are read from .env — NEVER hardcoded here.
+  # ==========================================================================
+  mariadb:
+    image: mariadb:10.6
+    container_name: uranos-mariadb
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+      - --default-authentication-plugin=mysql_native_password
+      - --innodb-buffer-pool-size=512M
+      - --innodb-log-file-size=128M
+      - --max-allowed-packet=64M
+      # Frappe relies heavily on row-level locking; ROW is the correct format.
+      - --binlog-format=ROW
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required — copy .env.example to .env}
+      MYSQL_DATABASE: _frappe_init
+    # MariaDB port is NOT published to the host by default.
+    # Access it via: docker compose exec mariadb mysql -uroot -p
+    # Un-comment the line below ONLY for local GUI tools (DBeaver, TablePlus).
+    # ports:
+    #   - "127.0.0.1:3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./docker/mariadb/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - uranos_net
+    healthcheck:
+      # Avoids password leakage in process list; reads from env variable.
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  # ==========================================================================
+  # Redis Cache — LRU eviction, ephemeral (cache can be cold-started)
+  # ==========================================================================
+  redis-cache:
+    image: redis:7-alpine
+    container_name: uranos-redis-cache
+    restart: unless-stopped
+    command: >
+      redis-server
+      --maxmemory ${REDIS_CACHE_MAXMEM:-256mb}
+      --maxmemory-policy allkeys-lru
+      --save ""
+    # Redis ports are NOT published to the host by default.
+    # ports:
+    #   - "127.0.0.1:6379:6379"
+    volumes:
+      - redis_cache_data:/data
+    networks:
+      - uranos_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ==========================================================================
+  # Redis Queue — persistent AOF (jobs must survive container restarts)
+  # ==========================================================================
+  redis-queue:
+    image: redis:7-alpine
+    container_name: uranos-redis-queue
+    restart: unless-stopped
+    command: >
+      redis-server
+      --appendonly yes
+      --appendfsync everysec
+    # ports:
+    #   - "127.0.0.1:6380:6379"
+    volumes:
+      - redis_queue_data:/data
+    networks:
+      - uranos_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ==========================================================================
+  # Redis SocketIO — ephemeral pub/sub channel, no persistence needed
+  # ==========================================================================
+  redis-socketio:
+    image: redis:7-alpine
+    container_name: uranos-redis-socketio
+    restart: unless-stopped
+    command: >
+      redis-server
+      --save ""
+      --maxmemory 64mb
+      --maxmemory-policy allkeys-lru
+    # ports:
+    #   - "127.0.0.1:6381:6379"
+    networks:
+      - uranos_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ==========================================================================
+  # Frappe / ERPNext v16 — Backend (Gunicorn + Socket.IO)
+  # The local apps/uranos_project_os dir is bind-mounted for live code editing.
+  # ==========================================================================
+  backend:
+    image: frappe/erpnext:v16
+    container_name: uranos-backend
+    restart: unless-stopped
+    entrypoint:
+      - bash
+      - -c
+      - >
+        bench set-config -g redis_cache "redis://redis-cache:6379" 2>/dev/null || true;
+        bench set-config -g redis_queue "redis://redis-queue:6379" 2>/dev/null || true;
+        bench set-config -g redis_socketio "redis://redis-socketio:6379" 2>/dev/null || true;
+        bench use uranos.localhost 2>/dev/null || true;
+        ln -sfn uranos.localhost /home/frappe/frappe-bench/sites/localhost 2>/dev/null || true;
+        bench build --hard-link --app uranos_project_os 2>/dev/null || true;
+        bench build --hard-link --using-cached 2>/dev/null || true;
+        exec start.sh
+    environment:
+      <<: *frappe-env
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?ADMIN_PASSWORD is required — copy .env.example to .env}
+    ports:
+      - "9000:9000"
+    volumes: *frappe-volumes
+    networks:
+      - uranos_net
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
+      redis-queue:
+        condition: service_healthy
+      redis-socketio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://127.0.0.1:8000/ || exit 0"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # ==========================================================================
+  # RQ Worker — SHORT queue (fast, interactive jobs: form saves, validations)
+  # Frappe best practice: separate workers per queue priority tier.
+  # ==========================================================================
+  worker-short:
+    image: frappe/erpnext:v16
+    container_name: uranos-worker-short
+    restart: unless-stopped
+    entrypoint: ["bench", "worker", "--queue", "short"]
+    environment: *frappe-env
+    volumes: *frappe-volumes
+    networks:
+      - uranos_net
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  # ==========================================================================
+  # RQ Worker — DEFAULT queue (standard background tasks)
+  # ==========================================================================
+  worker-default:
+    image: frappe/erpnext:v16
+    container_name: uranos-worker-default
+    restart: unless-stopped
+    entrypoint: ["bench", "worker", "--queue", "default"]
+    environment: *frappe-env
+    volumes: *frappe-volumes
+    networks:
+      - uranos_net
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  # ==========================================================================
+  # RQ Worker — LONG queue (heavy tasks: report generation, bulk ops, exports)
+  # ==========================================================================
+  worker-long:
+    image: frappe/erpnext:v16
+    container_name: uranos-worker-long
+    restart: unless-stopped
+    entrypoint: ["bench", "worker", "--queue", "long"]
+    environment: *frappe-env
+    volumes: *frappe-volumes
+    networks:
+      - uranos_net
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  # ==========================================================================
+  # Frappe Scheduler — timed jobs (cron-like hooks defined in DocTypes)
+  # ==========================================================================
+  scheduler:
+    image: frappe/erpnext:v16
+    container_name: uranos-scheduler
+    restart: unless-stopped
+    entrypoint: ["bench", "schedule"]
+    environment: *frappe-env
+    volumes: *frappe-volumes
+    networks:
+      - uranos_net
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  # ==========================================================================
+  # Nginx — reverse-proxy + websocket passthrough
+  # Frappe Desk accessible at: http://localhost
+  # ==========================================================================
+  nginx:
+    image: frappe/erpnext:v16
+    container_name: uranos-nginx
+    restart: unless-stopped
+    entrypoint: ["nginx-entrypoint.sh"]
+    environment:
+      BACKEND: "backend:8000"
+      SOCKETIO: "backend:9000"
+      FRAPPE_SITE_NAME_HEADER: "$$host"
+      UPSTREAM_REAL_IP_ADDRESS: "127.0.0.1"
+      UPSTREAM_REAL_IP_RECURSIVE: "off"
+      UPSTREAM_REAL_IP_HEADER: "X-Forwarded-For"
+    ports:
+      - "80:8080"
+      - "8080:8080"
+    volumes:
+      - bench_sites:/home/frappe/frappe-bench/sites
+      - ./apps/uranos_project_os:/home/frappe/frappe-bench/apps/uranos_project_os:z
+    networks:
+      - uranos_net
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080 || exit 0"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s

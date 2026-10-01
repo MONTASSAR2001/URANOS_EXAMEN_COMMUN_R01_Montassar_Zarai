@@ -1,0 +1,327 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Change Request",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 0,
+  "field_order": [
+    "project",
+    "work_package",
+    "description",
+    "reason",
+    "requested_by",
+    "urgency",
+    "technical_impact",
+    "schedule_impact_days",
+    "cost_impact",
+    "material_impact",
+    "document_impact",
+    "impacted_objects",
+    "policy",
+    "currency",
+    "cost_assessed",
+    "cost_assessed_by",
+    "cost_assessment_hash",
+    "scope_snapshot",
+    "financial_approval_required",
+    "payload_hash",
+    "proposed_solution",
+    "technical_approver",
+    "financial_approver",
+    "implemented_by",
+    "implementation_note",
+    "verified_by",
+    "verification_evidence",
+    "verification_note",
+    "decision_reason",
+    "status"
+  ],
+  "fields": [
+    {
+      "fieldname": "project",
+      "label": "Project",
+      "fieldtype": "Link",
+      "options": "Project",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "work_package",
+      "label": "Work Package",
+      "fieldtype": "Link",
+      "options": "URANOS Work Package",
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "description",
+      "label": "Description",
+      "fieldtype": "Text",
+      "reqd": 1
+    },
+    {
+      "fieldname": "reason",
+      "label": "Reason",
+      "fieldtype": "Small Text",
+      "reqd": 1
+    },
+    {
+      "fieldname": "requested_by",
+      "label": "Requested By",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "urgency",
+      "label": "Urgency",
+      "fieldtype": "Select",
+      "options": "Normal\nHigh\nCritical",
+      "default": "Normal"
+    },
+    {
+      "fieldname": "technical_impact",
+      "label": "Technical Impact",
+      "fieldtype": "Text"
+    },
+    {
+      "fieldname": "schedule_impact_days",
+      "label": "Schedule Impact Days",
+      "fieldtype": "Int"
+    },
+    {
+      "fieldname": "cost_impact",
+      "label": "Cost Impact",
+      "fieldtype": "Currency",
+      "permlevel": 1
+    },
+    {
+      "fieldname": "material_impact",
+      "label": "Material Impact",
+      "fieldtype": "Text"
+    },
+    {
+      "fieldname": "document_impact",
+      "label": "Document Impact",
+      "fieldtype": "Text"
+    },
+    {
+      "fieldname": "impacted_objects",
+      "label": "Impacted Objects",
+      "fieldtype": "Table",
+      "options": "URANOS Impacted Object"
+    },
+    {
+      "fieldname": "policy",
+      "label": "Policy",
+      "fieldtype": "Link",
+      "options": "URANOS Approval Policy",
+      "read_only": 1,
+      "permlevel": 1
+    },
+    {
+      "fieldname": "currency",
+      "label": "Currency",
+      "fieldtype": "Link",
+      "options": "Currency",
+      "read_only": 1,
+      "permlevel": 1
+    },
+    {
+      "fieldname": "cost_assessed",
+      "label": "Cost Assessed",
+      "fieldtype": "Check",
+      "read_only": 1
+    },
+    {
+      "fieldname": "cost_assessed_by",
+      "label": "Cost Assessed By",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "cost_assessment_hash",
+      "label": "Cost Assessment Hash",
+      "fieldtype": "Data",
+      "read_only": 1
+    },
+    {
+      "fieldname": "scope_snapshot",
+      "label": "Scope Snapshot",
+      "fieldtype": "Long Text",
+      "read_only": 1
+    },
+    {
+      "fieldname": "financial_approval_required",
+      "label": "Financial Approval Required",
+      "fieldtype": "Check",
+      "read_only": 1
+    },
+    {
+      "fieldname": "payload_hash",
+      "label": "Payload Hash",
+      "fieldtype": "Data",
+      "read_only": 1
+    },
+    {
+      "fieldname": "proposed_solution",
+      "label": "Proposed Solution",
+      "fieldtype": "Text"
+    },
+    {
+      "fieldname": "technical_approver",
+      "label": "Technical Approver",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "financial_approver",
+      "label": "Financial Approver",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "implemented_by",
+      "label": "Implemented By",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "implementation_note",
+      "label": "Implementation Note",
+      "fieldtype": "Text",
+      "read_only": 1
+    },
+    {
+      "fieldname": "verified_by",
+      "label": "Verified By",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "verification_evidence",
+      "label": "Verification Evidence",
+      "fieldtype": "Table",
+      "options": "URANOS Evidence"
+    },
+    {
+      "fieldname": "verification_note",
+      "label": "Verification Note",
+      "fieldtype": "Text",
+      "read_only": 1
+    },
+    {
+      "fieldname": "decision_reason",
+      "label": "Decision Reason",
+      "fieldtype": "Small Text",
+      "read_only": 1
+    },
+    {
+      "fieldname": "status",
+      "label": "Status",
+      "fieldtype": "Select",
+      "options": "Proposed\nImpact Analysis\nTechnical Approval\nFinancial Approval\nApproved\nRejected\nImplemented\nVerified\nClosed",
+      "default": "Proposed",
+      "in_list_view": 1
+    }
+  ],
+  "permissions": [
+    {
+      "role": "URANOS Executive",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Engineering Director",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Civil Director",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Electrical Execution Manager",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Project Manager",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Site Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Storekeeper",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Procurement Logistics",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS QA QC",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS HSE",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Finance Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Read Only Auditor",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Team Lead",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Executive",
+      "permlevel": 1,
+      "read": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Finance Controller",
+      "permlevel": 1,
+      "read": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

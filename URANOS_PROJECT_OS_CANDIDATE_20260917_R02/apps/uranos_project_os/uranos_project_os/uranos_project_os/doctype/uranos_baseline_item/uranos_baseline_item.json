@@ -1,0 +1,69 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Baseline Item",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 1,
+  "field_order": [
+    "work_package",
+    "code",
+    "qty_planned",
+    "weight",
+    "uom",
+    "baseline_start",
+    "baseline_finish"
+  ],
+  "fields": [
+    {
+      "fieldname": "work_package",
+      "label": "Work Package",
+      "fieldtype": "Link",
+      "options": "URANOS Work Package",
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "code",
+      "label": "Code",
+      "fieldtype": "Data",
+      "reqd": 1
+    },
+    {
+      "fieldname": "qty_planned",
+      "label": "Qty Planned",
+      "fieldtype": "Float",
+      "reqd": 1,
+      "precision": "6"
+    },
+    {
+      "fieldname": "weight",
+      "label": "Weight",
+      "fieldtype": "Float",
+      "reqd": 1,
+      "precision": "6"
+    },
+    {
+      "fieldname": "uom",
+      "label": "Uom",
+      "fieldtype": "Link",
+      "options": "UOM"
+    },
+    {
+      "fieldname": "baseline_start",
+      "label": "Baseline Start",
+      "fieldtype": "Date"
+    },
+    {
+      "fieldname": "baseline_finish",
+      "label": "Baseline Finish",
+      "fieldtype": "Date"
+    }
+  ],
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

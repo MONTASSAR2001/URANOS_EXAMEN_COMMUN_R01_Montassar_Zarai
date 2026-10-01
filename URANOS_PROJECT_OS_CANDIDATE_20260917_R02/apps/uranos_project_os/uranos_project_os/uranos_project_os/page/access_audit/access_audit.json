@@ -1,0 +1,32 @@
+{
+ "content": null,
+ "creation": "2026-09-30 19:30:14.698662",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2026-09-30 21:10:20.204492",
+ "modified_by": "Administrator",
+ "module": "URANOS Project OS",
+ "name": "access-audit",
+ "owner": "Administrator",
+ "page_name": "access-audit",
+ "roles": [
+  {
+   "role": "URANOS Executive"
+  },
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Administrator"
+  },
+  {
+   "role": "management"
+  }
+ ],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0,
+ "title": "URANOS \u2014 Security & Access Audit"
+}

@@ -1,0 +1,41 @@
+{
+ "content": null,
+ "creation": "2026-09-30 19:30:14.437745",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2026-09-30 19:37:21.347029",
+ "modified_by": "Administrator",
+ "module": "URANOS Project OS",
+ "name": "blocker-kanban",
+ "owner": "Administrator",
+ "page_name": "blocker-kanban",
+ "roles": [
+  {
+   "role": "URANOS Executive"
+  },
+  {
+   "role": "URANOS Project Manager"
+  },
+  {
+   "role": "URANOS Engineering Director"
+  },
+  {
+   "role": "Administrator"
+  },
+  {
+   "role": "management"
+  },
+  {
+   "role": "engineer"
+  },
+  {
+   "role": "site_team"
+  }
+ ],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0,
+ "title": "URANOS \u2014 Kanban Board"
+}

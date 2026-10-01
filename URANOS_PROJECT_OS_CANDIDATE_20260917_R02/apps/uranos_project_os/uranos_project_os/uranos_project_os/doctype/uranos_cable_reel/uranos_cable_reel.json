@@ -1,0 +1,212 @@
+{
+  "doctype": "DocType",
+  "name": "URANOS Cable Reel",
+  "module": "URANOS Project OS",
+  "custom": 0,
+  "autoname": "hash",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "allow_rename": 0,
+  "is_submittable": 0,
+  "istable": 0,
+  "field_order": [
+    "project",
+    "reel_id",
+    "item_code",
+    "manufacturer_ref",
+    "batch_no",
+    "original_length",
+    "current_expected_length",
+    "measured_length",
+    "warehouse",
+    "status",
+    "purchase_receipt",
+    "purchase_receipt_item",
+    "receipt_release_stock_entry",
+    "receipt_release_inspection",
+    "consumption_stock_entry",
+    "evidence"
+  ],
+  "fields": [
+    {
+      "fieldname": "project",
+      "label": "Project",
+      "fieldtype": "Link",
+      "options": "Project",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "reel_id",
+      "label": "Reel Id",
+      "fieldtype": "Data",
+      "reqd": 1,
+      "unique": 1
+    },
+    {
+      "fieldname": "item_code",
+      "label": "Item Code",
+      "fieldtype": "Link",
+      "options": "Item",
+      "reqd": 1
+    },
+    {
+      "fieldname": "manufacturer_ref",
+      "label": "Manufacturer Ref",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "batch_no",
+      "label": "Batch No",
+      "fieldtype": "Link",
+      "options": "Batch"
+    },
+    {
+      "fieldname": "original_length",
+      "label": "Original Length",
+      "fieldtype": "Float",
+      "reqd": 1,
+      "precision": "6"
+    },
+    {
+      "fieldname": "current_expected_length",
+      "label": "Current Expected Length",
+      "fieldtype": "Float",
+      "precision": "6",
+      "read_only": 1
+    },
+    {
+      "fieldname": "measured_length",
+      "label": "Measured Length",
+      "fieldtype": "Float",
+      "precision": "6"
+    },
+    {
+      "fieldname": "warehouse",
+      "label": "Warehouse",
+      "fieldtype": "Link",
+      "options": "Warehouse",
+      "reqd": 1
+    },
+    {
+      "fieldname": "status",
+      "label": "Status",
+      "fieldtype": "Select",
+      "options": "Draft\nAvailable\nIn Use\nReconciliation\nClosed",
+      "default": "Draft",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "purchase_receipt",
+      "label": "Purchase Receipt",
+      "fieldtype": "Link",
+      "options": "Purchase Receipt"
+    },
+    {
+      "fieldname": "purchase_receipt_item",
+      "label": "Purchase Receipt Item",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "receipt_release_stock_entry",
+      "label": "Receipt Release Stock Entry",
+      "fieldtype": "Link",
+      "options": "Stock Entry",
+      "read_only": 1
+    },
+    {
+      "fieldname": "receipt_release_inspection",
+      "label": "Receipt Release Inspection",
+      "fieldtype": "Link",
+      "options": "Quality Inspection",
+      "read_only": 1
+    },
+    {
+      "fieldname": "consumption_stock_entry",
+      "label": "Consumption Stock Entry",
+      "fieldtype": "Link",
+      "options": "Stock Entry",
+      "read_only": 1
+    },
+    {
+      "fieldname": "evidence",
+      "label": "Evidence",
+      "fieldtype": "Table",
+      "options": "URANOS Evidence"
+    }
+  ],
+  "permissions": [
+    {
+      "role": "URANOS Executive",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Engineering Director",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Civil Director",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Electrical Execution Manager",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Project Manager",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Site Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Storekeeper",
+      "read": 1,
+      "select": 1,
+      "create": 1,
+      "write": 1
+    },
+    {
+      "role": "URANOS Procurement Logistics",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS QA QC",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS HSE",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Finance Controller",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Read Only Auditor",
+      "read": 1,
+      "select": 1
+    },
+    {
+      "role": "URANOS Team Lead",
+      "read": 1,
+      "select": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

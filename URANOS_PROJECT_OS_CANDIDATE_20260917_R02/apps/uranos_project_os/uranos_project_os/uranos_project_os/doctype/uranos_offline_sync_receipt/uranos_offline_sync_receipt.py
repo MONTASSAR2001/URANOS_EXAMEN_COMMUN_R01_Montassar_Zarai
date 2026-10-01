@@ -1,0 +1,6 @@
+"""URANOS Offline Sync Receipt controller; business enforcement is shared."""
+from uranos_project_os.controllers import UranosDocument
+
+
+class URANOSOfflineSyncReceipt(UranosDocument):
+    pass
