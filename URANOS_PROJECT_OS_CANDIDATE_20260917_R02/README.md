@@ -22,7 +22,7 @@
 
 ---
 
-[Executive Summary](#1-executive-summary) • [System Architecture](#2-system-architecture--design) • [Business Workflow & Security](#3-business-workflow--the-golden-rule) • [Docker Infrastructure](#4-docker-infrastructure--deployment) • [Getting Started](#5-getting-started--installation) • [Quality Assurance](#6-quality-assurance--testing) • [Roadmap](#7-v11-engineering-roadmap)
+[Executive Summary](#1-executive-summary) • [System Architecture](#2-system-architecture--design) • [Business Workflow & Security](#3-business-workflow--the-golden-rule) • [Docker Infrastructure](#4-docker-infrastructure--deployment) • [Quick Start & Credentials](#5--quick-start--test-credentials) • [Quality Assurance](#6-quality-assurance--testing) • [Roadmap](#7-v11-engineering-roadmap)
 
 ---
 
@@ -238,70 +238,118 @@ graph LR
 
 ---
 
-## 5. Getting Started / Installation
+## 5. 🚀 Quick Start & Test Credentials
+
+This section provides a foolproof, step-by-step operational guide for the examination jury to spin up the complete Dockerized stack, configure the AI Copilot, and log in with the multi-persona test accounts.
 
 ### Prerequisites
 - **Docker Engine** (v24.0 or higher) & **Docker Compose v2** (`docker compose`)
-- **Python** (v3.14+ recommended for portable host testing)
-- **Node.js** (v24 LTS for Playwright Chromium test automation)
 - Minimum 4 GB RAM and 10 GB disk storage available
+- Modern Web Browser (Google Chrome, Chromium, Firefox, or Safari)
 
-### A. Fast Bootstrap (Automated Dev Setup)
-The fastest way to initialize the full stack from a pristine environment is using the automated bootstrap script:
+---
+
+### Step 1: Environment Configuration (`.env`) & AI Copilot Setup
+
+Before starting the containers, create your local `.env` configuration file from the provided template:
 
 ```bash
-# 1. Clone repository and navigate to root
+# 1. Navigate to the application root directory
 cd URANOS_PROJECT_OS_CANDIDATE_20260917_R02
 
-# 2. Configure environment variables from template
+# 2. Copy the template to active .env
 cp .env.example .env
+```
 
-# 3. Grant execution permissions and run bootstrap
+Open `.env` in any text editor and review or customize the environment variables:
+
+```env
+# ── MariaDB Database Secrets ─────────────────────────────────────────────────
+MYSQL_ROOT_PASSWORD=change_me_root_password
+DB_FRAPPE_PASSWORD=change_me_frappe_password
+
+# ── Frappe Site & SuperAdmin Master Credentials ──────────────────────────────
+FRAPPE_SITE_NAME=uranos.localhost
+ADMIN_PASSWORD=change_me_admin_password
+
+# ── Redis Cache Sizing ───────────────────────────────────────────────────────
+REDIS_CACHE_MAXMEM=256mb
+
+# ── AI Copilot (Cloud RAG Engine — Optional) ─────────────────────────────────
+# Get a free, ultra-fast API key at https://console.groq.com/keys
+# Powers cloud RAG issue synthesis (Llama 3.3 70B & Qwen 2.5 72B).
+GROQ_API_KEY=gsk_your_groq_api_key_here
+```
+
+> [!TIP]
+> **Deterministic Offline Mode**: Adding a `GROQ_API_KEY` is completely **optional**. If omitted, invalid, or during an external network outage, the AI Copilot seamlessly and silently activates its pure deterministic fallback algorithm ([`build_deterministic_blocker_summary`](file:///home/montassar/Desktop/llm/URANOS_EXAMEN_COMMUN_R01_Montassar_Zarai/URANOS_PROJECT_OS_CANDIDATE_20260917_R02/apps/uranos_project_os/uranos_project_os/services/ai_synthesis.py#L67)). The system produces rich executive syntheses in Arabic, French, or English directly from local database records with zero cost and zero hallucinations!
+
+To inject the key dynamically into an already running Frappe container without restarting:
+```bash
+docker compose exec backend bench --site uranos.localhost set-config -g groq_api_key "gsk_your_groq_api_key_here"
+```
+
+---
+
+### Step 2: Spin Up the Stack via Docker
+
+You can initialize and launch the entire stack using either the automated bootstrap script or standard Docker Compose commands:
+
+#### Option A: Automated Bootstrap (Recommended for First-Time Setup)
+```bash
+# Grant execution permissions and run bootstrap
 chmod +x setup_dev.sh
 ./setup_dev.sh
 ```
+`setup_dev.sh` autonomously validates prerequisites, spins up all 10 containers, waits for MariaDB and Redis health checks, provisions the `uranos.localhost` Frappe site, installs `erpnext` and `uranos_project_os`, and synchronizes all 42 DocType schemas into MariaDB via `bench migrate`.
 
-`setup_dev.sh` automatically performs:
-1. Prerequisites and Docker daemon validation.
-2. Container orchestration startup (`docker compose up -d`).
-3. Readiness polling until MariaDB and Redis pass health checks.
-4. Site initialization (`uranos.localhost`), ERPNext and `uranos_project_os` app installation.
-5. Migration of all 42 DocType schemas into MariaDB (`bench migrate`).
-6. Verification of critical operational tables (e.g., `tabURANOS Blocker`).
-
-### B. Manual Docker Lifecycle Management
-
+#### Option B: Standard Docker Compose Commands
 ```bash
-# Start all containers in background
+# 1. Start all 10 services in detached mode
 docker compose up -d
 
-# Inspect real-time container health
+# 2. Inspect real-time container health
 docker compose ps
 
-# Tail unified backend logs
+# 3. View live backend logs if needed
 docker compose logs -f backend
 
-# Enter the Frappe runtime shell
-docker compose exec backend bash
-
-# Run Frappe interactive Python console
-docker compose exec backend bench --site uranos.localhost console
-
-# Re-run migrations after DocType modification
-docker compose exec backend bench --site uranos.localhost migrate
-
-# Graceful shutdown (preserving MariaDB & Redis volumes)
+# 4. Graceful shutdown (preserving MariaDB & Redis volumes)
 docker compose down
 ```
 
-### C. Accessing the Platform
+---
 
-| Endpoint | Target URL | Default Credentials | Description |
+### Step 3: Official Examination Test Accounts (Credentials)
+
+The platform is pre-loaded with four operational personas configured in MariaDB to test the strict Role-Based Access Control (RBAC), multi-project data isolation, and **The Golden Rule** (`closed_by != resolved_by`).
+
+| Persona / Business Role | Email / Login Username | Password | Desk Cards Rendered | Project Access Scope | Operational Responsibilities & Permissions |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| 👔 **Direction / Manager**<br>*(Executive Portfolio Lead)* | `direction_01@uranos.local` | `Password123!` | **10 Cards** | **All 20 Sites**<br>*(National Fleet)* | • Strategic executive oversight & financial budgets.<br>• Global blocker declaration & independent closure.<br>• View portfolio-wide Leaflet GIS & KPIs.<br>*(Field installation entries hidden)*. |
+| 👷‍♂️ **Ingénieur / Engineer**<br>*(Engineering Lead / Quality)* | `ingenieur_01@uranos.local` | `Password123!` | **11 Cards** | **Assigned Sites**<br>*(Restricted)* | • Technical design authority & work package review.<br>• Non-Conformance Reports (NCRs) & equipment maintenance.<br>• Responsible for blocker verification & independent closure.<br>*(Financial ledgers hidden)*. |
+| 🦺 **Équipe Chantier / Site Team**<br>*(Site Controller / Field Team)* | `chantier_01@uranos.local` | `Password123!` | **10 Cards** | **Assigned Sites**<br>*(Restricted)* | • Daily field progress declarations & site warehouse stock.<br>• Obstacle declaration & corrective action submission (`À vérifier`).<br>• **Strictly barred from closing blockers** *(Golden Rule)*. |
+| ⚡ **SuperAdmin**<br>*(System Administrator)* | `Administrator` | `change_me_admin_password`<br>*(or value in `.env`)* | **17 Cards** | **All 20 Sites**<br>*(Global Root)* | • Complete platform control & user access provisioning.<br>• Security Access Audit page, DocType schema editor.<br>• ERPNext core settings & queue monitoring. |
+
+> [!IMPORTANT]
+> **Live Verification of The Golden Rule**:
+> 1. Log in as `chantier_01@uranos.local` and submit a resolution on an obstacle on their assigned site (e.g., `PV-0001`). The status moves to **`À vérifier`**.
+> 2. Attempt to click **Verify & Close** with `chantier_01@uranos.local` $\to$ **The system immediately rejects the action** with an explicit error: `Auto-vérification refusée.`
+> 3. Log in as `ingenieur_01@uranos.local` (or `direction_01@uranos.local`) $\to$ The independent engineer inspects the evidence and successfully transitions the obstacle to **`Clôturé`**.
+
+---
+
+### Step 4: Key Platform Portals & Direct URLs
+
+Once the stack is initialized, open your browser and navigate to the desired views:
+
+| Portal | Target URL | Authorized Roles | Description |
 | :--- | :--- | :--- | :--- |
-| **Web Desk** | [`http://localhost:8080`](http://localhost:8080) | `Administrator` / *(from `.env`)* | Main SaaS interface & Bento workspace |
-| **Blocker Dashboard** | [`http://localhost:8080/desk/blocker-dashboard`](http://localhost:8080/desk/blocker-dashboard) | Operational Personas | Blocker KPIs, Leaflet GIS, & filters |
-| **Kanban Board** | [`http://localhost:8080/desk/blocker-kanban`](http://localhost:8080/desk/blocker-kanban) | Operational Personas | 4-column drag-and-drop lifecycle board |
-| **AI Copilot** | [`http://localhost:8080/desk/uranos-ai-copilot`](http://localhost:8080/desk/uranos-ai-copilot) | Operational Personas | Bilingual RAG synthesis & issue analyzer |
+| **🌐 URANOS Main Desk** | [`http://localhost:8080`](http://localhost:8080) | All Personas | Glassmorphic Bento Grid workspace with dynamic role-filtered cards. |
+| **📊 Blocker Executive Dashboard** | [`http://localhost:8080/desk/blocker-dashboard`](http://localhost:8080/desk/blocker-dashboard) | All Personas | Real-time Leaflet GIS fleet map, obstacle KPIs, and multi-criteria filters. |
+| **📋 4-Column Blocker Kanban** | [`http://localhost:8080/desk/blocker-kanban`](http://localhost:8080/desk/blocker-kanban) | All Personas | Drag-and-drop lifecycle board with parametric reference date toolbar (`#uranos-kanban-ref-date`). |
+| **🤖 Dual-Engine AI Copilot** | [`http://localhost:8080/desk/uranos-ai-copilot`](http://localhost:8080/desk/uranos-ai-copilot) | All Personas | Interactive RAG & deterministic synthesis with full French/Arabic RTL support. |
+| **🛡️ Security & Access Audit** | [`http://localhost:8080/desk/access-audit`](http://localhost:8080/desk/access-audit) | `Administrator` | Visual matrix auditing granted sites, operational roles, and permission gates. |
 
 ---
 
