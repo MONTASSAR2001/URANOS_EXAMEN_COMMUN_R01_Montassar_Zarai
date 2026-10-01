@@ -48,7 +48,7 @@ def run_tests():
         # Insert fresh blocker in Open state
         blocker = frappe.get_doc({
             "doctype": "URANOS Blocker",
-            "project": "PV-01",
+            "project": "PV-0004",
             "title": "Disjoncteur DC Surchauffe Onduleur",
             "status": "Open",
             "severity": "Critical",
@@ -96,6 +96,19 @@ def run_tests():
         )
 
         # Step 3B: Attempt Closure without corrective action
+        frappe.set_user("Administrator")
+        if not frappe.db.exists("User Permission", {"user": "ingenieur_03@uranos.local", "allow": "Project", "for_value": "PV-0004"}):
+            perm = frappe.get_doc({
+                "doctype": "User Permission",
+                "user": "ingenieur_03@uranos.local",
+                "allow": "Project",
+                "for_value": "PV-0004",
+                "apply_to_all_doctypes": 1,
+            })
+            perm.flags.ignore_permissions = True
+            perm.insert(ignore_permissions=True)
+            frappe.db.commit()
+
         frappe.set_user("ingenieur_03@uranos.local")  # Independent engineer
         no_action_blocked = False
         err_msg_action = ""
@@ -271,7 +284,7 @@ def run_tests():
         from uranos_project_os.services.ai_synthesis import generate_blocker_synthesis
         
         # Execute synthesis with force_fallback=True (deterministic zero-network mode)
-        synth = generate_blocker_synthesis(project="PV-01", force_fallback=True, lang="fr")
+        synth = generate_blocker_synthesis(project="PV-0004", force_fallback=True, lang="fr")
         assert_true(synth is not None, "generate_blocker_synthesis executed successfully")
         
         summary = synth.get("summary") or ""

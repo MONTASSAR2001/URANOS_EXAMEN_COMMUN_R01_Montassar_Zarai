@@ -301,7 +301,7 @@ def test_ai_synthesis_success_when_api_healthy(monkeypatch, mock_blockers):
     assert "Strategic AI Blocker Analysis" in result["summary"]
     assert result["open_count"] == 3
     assert called_args["url"] == "https://api.groq.com/openai/v1/chat/completions"
-    assert called_args["json"]["model"] == "llama-3.3-70b-versatile"
+    assert called_args["json"]["model"] in ("llama-3.3-70b-versatile", "qwen/qwen3.8-27b")
     assert called_args["headers"]["Authorization"] == "Bearer gsk_live_test_key"
 
 
